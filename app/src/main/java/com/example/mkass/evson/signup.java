@@ -1,13 +1,10 @@
 package com.example.mkass.evson;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.multidex.MultiDex;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,16 +13,15 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
 
 import customfonts.MyEditText;
 import customfonts.MyTextView;
 import entities.Personne;
-
-import org.codehaus.jackson.map.ObjectMapper;
-
-import java.io.IOException;
 
 public class signup extends AppCompatActivity {
 
@@ -162,6 +158,7 @@ public class signup extends AppCompatActivity {
         // Make RESTful webservice call using AsyncHttpClient object
         AsyncHttpClient client = new AsyncHttpClient();
 
+
         client.get(R.string.ipAdress + "/useraccount/register/doregister",params ,new AsyncHttpResponseHandler() {
             // When the response returned by REST has Http response code '200'
             @Override
@@ -225,9 +222,4 @@ public class signup extends AppCompatActivity {
     }
 
 
-    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
-        MultiDex.install(this);
-    }
 }
