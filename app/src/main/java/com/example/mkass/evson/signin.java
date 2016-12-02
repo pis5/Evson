@@ -5,7 +5,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,7 +18,6 @@ import org.json.JSONObject;
 
 import customfonts.MyEditText;
 import customfonts.MyTextView;
-import entities.Personne;
 
 public class signin extends AppCompatActivity {
 
@@ -71,7 +69,7 @@ public class signin extends AppCompatActivity {
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                loginUser();
             }
         });
 
@@ -80,9 +78,8 @@ public class signin extends AppCompatActivity {
     /**
      * Method gets triggered when Login button is clicked
      *
-     * @param view
      */
-    public void loginUser(View view){
+    public void loginUser(){
         // Get Email Edit View Value
         String email = emailET.getText().toString();
         // Get Password Edit View Value
