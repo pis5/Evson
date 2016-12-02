@@ -2,7 +2,6 @@
 
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#fff">
@@ -115,7 +114,6 @@
             android:layout_marginLeft="46dp"
             android:textColorHint="@color/colorhint"
             android:textColor="#100b20"
-            android:maxLength="12"
             android:background="#0000"
             android:padding="16dp"
             android:gravity="left"
