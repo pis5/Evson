@@ -70,6 +70,8 @@ public class signin extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 loginUser();
+                //Intent it = new Intent(signin.this, HomeActivity.class);
+                //startActivity(it);
             }
         });
 
