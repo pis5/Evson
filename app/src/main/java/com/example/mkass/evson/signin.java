@@ -11,13 +11,19 @@ import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+
 import com.loopj.android.http.RequestParams;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
+
+
+import java.io.IOException;
 
 import customfonts.MyEditText;
 import customfonts.MyTextView;
+import entities.Personne;
 
 public class signin extends AppCompatActivity {
 
@@ -31,6 +37,7 @@ public class signin extends AppCompatActivity {
     MyTextView btnSignIn;
 
     ProgressBar progressBar;
+    Personne P=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +77,7 @@ public class signin extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 loginUser();
-                //Intent it = new Intent(signin.this, HomeActivity.class);
-                //startActivity(it);
+
             }
         });
 
@@ -93,7 +99,7 @@ public class signin extends AppCompatActivity {
             // When Email entered is Valid
             if(Utility.validate(email)){
                 // Put Http parameter username with value of Email Edit View control
-                params.put("email", email);
+                params.put("email", email.trim());
                 // Put Http parameter password with value of Password Edit Value control
                 params.put("motDePasse", password);
                 // Invoke RESTful Web Service with Http parameters
@@ -119,9 +125,8 @@ public class signin extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
         // Make RESTful webservice call using AsyncHttpClient object
         AsyncHttpClient client = new AsyncHttpClient();
-
-
-        client.get(getBaseContext().getString(R.string.ipAdress) + "/login/dologin" ,params ,new AsyncHttpResponseHandler() {
+        String ip =getString(R.string.ipAdress);
+        AsyncHttpResponseHandler RH=new AsyncHttpResponseHandler() {
             // When the response returned by REST has Http response code '200'
             @Override
             public void onSuccess(String response) {
@@ -129,23 +134,35 @@ public class signin extends AppCompatActivity {
                 progressBar.setVisibility(View.GONE);
                 try {
                     // JSON Object
-                    JSONObject obj = new JSONObject(response);
+
                     // When the JSON response has status boolean value assigned with true
-                    if(obj.getBoolean("status")){
-                        Toast.makeText(getApplicationContext(), "You are successfully logged in!", Toast.LENGTH_LONG).show();
+                    if((!response.equals(""))&&!response.equals(null)){
+
                         // Navigate to Home screen
+                        ObjectMapper mapper = new ObjectMapper();
+                        P = mapper.readValue(response, Personne.class);
+
+                        Toast.makeText(getApplicationContext(), P.getNom()+" "+P.getPrenom()+ " connecté", Toast.LENGTH_LONG).show();
+
+
+                            Intent it = new Intent(signin.this, HomeActivity.class);
+                            it.putExtra("personne",P);
+                            startActivity(it);
+
+
 
                     }
                     // Else display error message
                     else{
-                        errorMsgET.setText(obj.getString("error_msg"));
-                        Toast.makeText(getApplicationContext(), obj.getString("error_msg"), Toast.LENGTH_LONG).show();
+                        errorMsgET.setText("E-Mail ou mot de passe incorrect");
+                        Toast.makeText(getApplicationContext(), "E-Mail ou mot de passe incorrect", Toast.LENGTH_LONG).show();
                     }
-                } catch (JSONException e) {
-                    // TODO Auto-generated catch block
-                    Toast.makeText(getApplicationContext(), "Error Occured [Server's JSON response might be invalid]!", Toast.LENGTH_LONG).show();
+                } catch (JsonParseException e) {
                     e.printStackTrace();
-
+                } catch (JsonMappingException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
             // When the response returned by REST has Http response code other than '200'
@@ -168,7 +185,11 @@ public class signin extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]", Toast.LENGTH_LONG).show();
                 }
             }
-        });
+        };
+
+        client.get( ip +"/login/dologin",params ,RH);
+
+
     }
 
 }
