@@ -159,7 +159,7 @@ public class signup extends AppCompatActivity {
         AsyncHttpClient client = new AsyncHttpClient();
 
 
-        client.get(R.string.ipAdress + "/ServiceWebAndroid-war/register/doregister",params ,new AsyncHttpResponseHandler() {
+        client.get(getBaseContext().getString(R.string.ipAdress) + "/register/doregister",params ,new AsyncHttpResponseHandler() {
             // When the response returned by REST has Http response code '200'
             @Override
             public void onSuccess(String response) {

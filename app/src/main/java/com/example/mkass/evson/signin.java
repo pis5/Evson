@@ -120,7 +120,8 @@ public class signin extends AppCompatActivity {
         // Make RESTful webservice call using AsyncHttpClient object
         AsyncHttpClient client = new AsyncHttpClient();
 
-        client.get(R.string.ipAdress + "/ServiceWebAndroid-war/login/dologin",params ,new AsyncHttpResponseHandler() {
+
+        client.get(getBaseContext().getString(R.string.ipAdress) + "/login/dologin" ,params ,new AsyncHttpResponseHandler() {
             // When the response returned by REST has Http response code '200'
             @Override
             public void onSuccess(String response) {
