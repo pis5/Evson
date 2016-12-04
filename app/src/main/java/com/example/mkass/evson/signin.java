@@ -13,11 +13,13 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.codehaus.jackson.map.ObjectMapper;
+
+import java.io.IOException;
 
 import customfonts.MyEditText;
 import customfonts.MyTextView;
+import entities.Personne;
 
 public class signin extends AppCompatActivity {
 
@@ -70,8 +72,6 @@ public class signin extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 loginUser();
-                //Intent it = new Intent(signin.this, HomeActivity.class);
-                //startActivity(it);
             }
         });
 
@@ -127,26 +127,39 @@ public class signin extends AppCompatActivity {
             public void onSuccess(String response) {
                 // Hide Progress Dialog
                 progressBar.setVisibility(View.GONE);
-                try {
-                    // JSON Object
+               // try {
+                    ObjectMapper mapper = new ObjectMapper();
+                    try {
+                        Personne obj = mapper.readValue(response, Personne.class);
+                        Toast.makeText(getApplicationContext(), "You are successfully logged in!", Toast.LENGTH_LONG).show();
+                        // Navigate to Home screen
+                        Intent it = new Intent(signin.this, HomeActivity.class);
+                        it.putExtra("personne", obj);
+                        startActivity(it);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    /*// JSON Object
                     JSONObject obj = new JSONObject(response);
                     // When the JSON response has status boolean value assigned with true
                     if(obj.getBoolean("status")){
                         Toast.makeText(getApplicationContext(), "You are successfully logged in!", Toast.LENGTH_LONG).show();
                         // Navigate to Home screen
+                        Intent it = new Intent(signin.this, HomeActivity.class);
+                        startActivity(it);
 
                     }
                     // Else display error message
                     else{
                         errorMsgET.setText(obj.getString("error_msg"));
                         Toast.makeText(getApplicationContext(), obj.getString("error_msg"), Toast.LENGTH_LONG).show();
-                    }
-                } catch (JSONException e) {
-                    // TODO Auto-generated catch block
-                    Toast.makeText(getApplicationContext(), "Error Occured [Server's JSON response might be invalid]!", Toast.LENGTH_LONG).show();
-                    e.printStackTrace();
+                    }*/
+               // } catch (JSONException e) {
+                //    // TODO Auto-generated catch block
+                //    Toast.makeText(getApplicationContext(), "Error Occured [Server's JSON response might be invalid]!", Toast.LENGTH_LONG).show();
+                 //   e.printStackTrace();
 
-                }
+               // }
             }
             // When the response returned by REST has Http response code other than '200'
 

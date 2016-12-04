@@ -94,7 +94,7 @@ public class signup extends AppCompatActivity {
         String firstname = firstNameET.getText().toString();
 
         // Get Email ET control value
-        String email = emailET.getText().toString();
+        String email = emailET.getText().toString().trim();
 
         // Get Password ET control value
         String password = passwordET.getText().toString();
