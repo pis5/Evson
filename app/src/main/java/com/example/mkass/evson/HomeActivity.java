@@ -13,8 +13,22 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.codehaus.jackson.map.ObjectMapper;
+
+import java.lang.reflect.Type;
+import java.util.List;
+
+import entities.Evenement;
+
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    List<Evenement> Le=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,5 +112,72 @@ public class HomeActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+
+
+
+
+
+    public void listeMesEvenements(RequestParams params){
+        // Show Progress Dialog
+
+        // Make RESTful webservice call using AsyncHttpClient object
+        AsyncHttpClient client = new AsyncHttpClient();
+        String ip =getString(R.string.ipAdress);
+        AsyncHttpResponseHandler RH=new AsyncHttpResponseHandler() {
+            // When the response returned by REST has Http response code '200'
+            @Override
+            public void onSuccess(String response) {
+
+
+
+                    // JSON Object
+                Gson gson = new Gson();
+
+                    // When the JSON response has status boolean value assigned with true
+                    if((!response.equals(""))&&!response.equals(null)){
+
+                        //
+                        Type type = new TypeToken<List<Evenement>>(){}.getType();
+
+                        List<Evenement> L = gson.fromJson(response, type);;
+
+                        Le=L;
+
+
+
+
+                    }
+                    // Else display error message
+                    else{
+                    }
+
+            }
+            // When the response returned by REST has Http response code other than '200'
+
+            @Override
+            public void onFailure(int statusCode, Throwable error,
+                                  String content) {
+                // Hide Progress Dialog
+
+                // When Http response code is '404'
+                if(statusCode == 404){
+                   // Toast.makeText(getApplicationContext(), "Requested resource not found", Toast.LENGTH_LONG).show();
+                }
+                // When Http response code is '500'
+                else if(statusCode == 500){
+                   // Toast.makeText(getApplicationContext(), "Something went wrong at server end", Toast.LENGTH_LONG).show();
+                }
+                // When Http response code other than 404, 500
+                else{
+                   // Toast.makeText(getApplicationContext(), "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]", Toast.LENGTH_LONG).show();
+                }
+            }
+        };
+
+        client.get( ip +"/mesevenements/afficher",params ,RH);
+
+
     }
 }
