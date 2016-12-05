@@ -46,7 +46,7 @@ public class HomeActivity extends AppCompatActivity
 
         final RecyclerView rv  = (RecyclerView)findViewById(R.id.list);
         rv.setLayoutManager(new LinearLayoutManager(this));
-        rv.setAdapter(new MyAdapter());
+        rv.setAdapter(new EvenementAdapter(getString(R.string.ipAdress)));
     }
 
     @Override
