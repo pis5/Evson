@@ -49,6 +49,8 @@ public class EvenementAdapter extends RecyclerView.Adapter<EvenementAdapter.MyVi
         holder.display(ev);
     }
 
+
+
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         MyTextView title;
