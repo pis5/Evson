@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,10 +20,10 @@ import android.widget.ProgressBar;
 import java.util.List;
 
 import entities.Evenement;
+import entities.Personne;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    List<Evenement> Le=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +31,7 @@ public class HomeActivity extends AppCompatActivity
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Home");
+        getSupportActionBar().setTitle("My Events");
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -50,10 +51,18 @@ public class HomeActivity extends AppCompatActivity
             NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+
+        Personne pers = (Personne)getIntent().getSerializableExtra("personne");
+
+        Log.i("Attention!!!!!", "tests test remplis");
         final RecyclerView rv  = (RecyclerView)findViewById(R.id.list);
         rv.setLayoutManager(new LinearLayoutManager(this));
-        EvenementAdapter adapter = new EvenementAdapter(getString(R.string.ipAdress));
+
+        EvenementAdapter adapter = new EvenementAdapter();
+        adapter.invokeWS(pers, 0, 10,true,this);
         rv.setAdapter(adapter);
+
+
 
         final ProgressBar progress = (ProgressBar) findViewById(R.id.progress);
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {

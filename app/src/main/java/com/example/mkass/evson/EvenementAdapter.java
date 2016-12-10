@@ -1,12 +1,15 @@
 package com.example.mkass.evson;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -21,15 +24,12 @@ import java.util.List;
 
 import customfonts.MyTextView;
 import entities.Evenement;
+import entities.Personne;
 
 public class EvenementAdapter extends RecyclerView.Adapter<EvenementAdapter.MyViewHolder> {
 
     private List<Evenement> evenements = new ArrayList<Evenement>();
-    private String ipAddress;
 
-    public EvenementAdapter(String ip) {
-        ipAddress = ip;
-    }
 
     @Override
     public int getItemCount() {
@@ -98,11 +98,18 @@ public class EvenementAdapter extends RecyclerView.Adapter<EvenementAdapter.MyVi
     }
 
 
-    public void listeMesEvenements(RequestParams params){
+    public void invokeWS(final Personne pers, final int offset, final int nbre, final boolean plusAncien, final Context context){
+
+        //Request parameters
+        final RequestParams params = new RequestParams();
+        params.put("personne", pers);
+        params.put("offset", offset);
+        params.put("nbre", nbre);
+        params.put("plusAncien", plusAncien);
         // Show Progress Dialog
         // Make RESTful webservice call using AsyncHttpClient object
-        AsyncHttpClient client = new AsyncHttpClient();
-        String ip = ipAddress;
+        final AsyncHttpClient client = new AsyncHttpClient();
+        final String ip = context.getString(R.string.ipAdress);
         AsyncHttpResponseHandler RH=new AsyncHttpResponseHandler() {
             // When the response returned by REST has Http response code '200'
             @Override
@@ -113,11 +120,13 @@ public class EvenementAdapter extends RecyclerView.Adapter<EvenementAdapter.MyVi
                 if((!response.equals(""))&&!response.equals(null)){
                     //
                     Type type = new TypeToken<List<Evenement>>(){}.getType();
-                    List<Evenement> L = gson.fromJson(response, type);;
-                    evenements=L;
+                    List<Evenement> L = gson.fromJson(response, type);
+                    Log.i("Attention!!!!!", "Evenements ajoutés");
+                    evenements.addAll(L);
                 }
                 // Else display error message
                 else{
+                    Toast.makeText(context, "No events to show", Toast.LENGTH_LONG).show();
                 }
             }
             // When the response returned by REST has Http response code other than '200'
@@ -127,19 +136,30 @@ public class EvenementAdapter extends RecyclerView.Adapter<EvenementAdapter.MyVi
                 // Hide Progress Dialog
                 // When Http response code is '404'
                 if(statusCode == 404){
-                    // Toast.makeText(getApplicationContext(), "Requested resource not found", Toast.LENGTH_LONG).show();
+                     Toast.makeText(context, "Requested resource not found", Toast.LENGTH_LONG).show();
                 }
                 // When Http response code is '500'
                 else if(statusCode == 500){
-                    // Toast.makeText(getApplicationContext(), "Something went wrong at server end", Toast.LENGTH_LONG).show();
+                     Toast.makeText(context, "Something went wrong at server end", Toast.LENGTH_LONG).show();
                 }
                 // When Http response code other than 404, 500
                 else{
-                    // Toast.makeText(getApplicationContext(), "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]", Toast.LENGTH_LONG).show();
+                     Toast.makeText(context, "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]", Toast.LENGTH_LONG).show();
                 }
             }
+
+            @Override
+            public void onFinish() {
+                RequestParams params = new RequestParams();
+                params.put("personne", pers);
+                params.put("offset", evenements.size()-1);
+                params.put("nbre", nbre);
+                params.put("plusAncien", plusAncien);
+                client.get( context.getString(R.string.ipAdress) +"/evenementsamis/afficher",params ,this);
+            }
         };
-        client.get( ip +"/mesevenements/afficher",params ,RH);
+        client.get( ip +"/evenementsamis/afficher",params ,RH);
+
     }
 
 }
