@@ -13,30 +13,19 @@ import java.io.Serializable;
  * @author ilias
  */
 
-public class EvenementInvitationPK implements Serializable {
+public class DemandeAjoutPK implements Serializable {
 
-
-    private int evenement;
 
     private int emetteur;
 
     private int recepteur;
 
-    public EvenementInvitationPK() {
+    public DemandeAjoutPK() {
     }
 
-    public EvenementInvitationPK(int evenement, int emetteur, int recepteur) {
-        this.evenement = evenement;
+    public DemandeAjoutPK(int emetteur, int recepteur) {
         this.emetteur = emetteur;
         this.recepteur = recepteur;
-    }
-
-    public int getEvenement() {
-        return evenement;
-    }
-
-    public void setEvenement(int evenement) {
-        this.evenement = evenement;
     }
 
     public int getEmetteur() {
@@ -58,7 +47,6 @@ public class EvenementInvitationPK implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (int) evenement;
         hash += (int) emetteur;
         hash += (int) recepteur;
         return hash;
@@ -67,13 +55,10 @@ public class EvenementInvitationPK implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof EvenementInvitationPK)) {
+        if (!(object instanceof DemandeAjoutPK)) {
             return false;
         }
-        EvenementInvitationPK other = (EvenementInvitationPK) object;
-        if (this.evenement != other.evenement) {
-            return false;
-        }
+        DemandeAjoutPK other = (DemandeAjoutPK) object;
         if (this.emetteur != other.emetteur) {
             return false;
         }
@@ -85,7 +70,7 @@ public class EvenementInvitationPK implements Serializable {
 
     @Override
     public String toString() {
-        return "entities.EvenementInvitationPK[ evenement=" + evenement + ", emetteur=" + emetteur + ", recepteur=" + recepteur + " ]";
+        return "entities.DemandeAjoutPK[ emetteur=" + emetteur + ", recepteur=" + recepteur + " ]";
     }
     
 }

@@ -13,20 +13,19 @@ import java.io.Serializable;
  * @author ilias
  */
 
-public class InvitationPK implements Serializable {
+public class AmisPK implements Serializable {
 
 
     private int personne;
-    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
 
-    private String email;
+    private int ami;
 
-    public InvitationPK() {
+    public AmisPK() {
     }
 
-    public InvitationPK(int personne, String email) {
+    public AmisPK(int personne, int ami) {
         this.personne = personne;
-        this.email = email;
+        this.ami = ami;
     }
 
     public int getPersonne() {
@@ -37,33 +36,33 @@ public class InvitationPK implements Serializable {
         this.personne = personne;
     }
 
-    public String getEmail() {
-        return email;
+    public int getAmi() {
+        return ami;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setAmi(int ami) {
+        this.ami = ami;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
         hash += (int) personne;
-        hash += (email != null ? email.hashCode() : 0);
+        hash += (int) ami;
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof InvitationPK)) {
+        if (!(object instanceof AmisPK)) {
             return false;
         }
-        InvitationPK other = (InvitationPK) object;
+        AmisPK other = (AmisPK) object;
         if (this.personne != other.personne) {
             return false;
         }
-        if ((this.email == null && other.email != null) || (this.email != null && !this.email.equals(other.email))) {
+        if (this.ami != other.ami) {
             return false;
         }
         return true;
@@ -71,7 +70,7 @@ public class InvitationPK implements Serializable {
 
     @Override
     public String toString() {
-        return "entities.InvitationPK[ personne=" + personne + ", email=" + email + " ]";
+        return "entities.AmisPK[ personne=" + personne + ", ami=" + ami + " ]";
     }
     
 }

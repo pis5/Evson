@@ -6,20 +6,19 @@
 package entities;
 
 import java.io.Serializable;
-import java.util.List;
 
 
 /**
  *
- * @author mkass
+ * @author ilias
  */
+
 public class GenreDEvenement implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     private Integer id;
-
-    private List<Evenement> evenementList;
+    
 
     public GenreDEvenement() {
     }
@@ -36,14 +35,7 @@ public class GenreDEvenement implements Serializable {
         this.id = id;
     }
 
-
-    public List<Evenement> getEvenementList() {
-        return evenementList;
-    }
-
-    public void setEvenementList(List<Evenement> evenementList) {
-        this.evenementList = evenementList;
-    }
+ 
 
     @Override
     public int hashCode() {

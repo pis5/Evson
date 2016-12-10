@@ -13,32 +13,36 @@ import java.util.Date;
  *
  * @author ilias
  */
-public class Invitation implements Serializable {
+
+public class Amis implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    protected InvitationPK invitationPK;
+
+    protected AmisPK amisPK;
 
     private Date date;
 
     private Personne personne1;
 
-    public Invitation() {
+    private Personne personne2;
+
+    public Amis() {
     }
 
-    public Invitation(InvitationPK invitationPK) {
-        this.invitationPK = invitationPK;
+    public Amis(AmisPK amisPK) {
+        this.amisPK = amisPK;
     }
 
-    public Invitation(int personne, String email) {
-        this.invitationPK = new InvitationPK(personne, email);
+    public Amis(int personne, int ami) {
+        this.amisPK = new AmisPK(personne, ami);
     }
 
-    public InvitationPK getInvitationPK() {
-        return invitationPK;
+    public AmisPK getAmisPK() {
+        return amisPK;
     }
 
-    public void setInvitationPK(InvitationPK invitationPK) {
-        this.invitationPK = invitationPK;
+    public void setAmisPK(AmisPK amisPK) {
+        this.amisPK = amisPK;
     }
 
     public Date getDate() {
@@ -57,21 +61,29 @@ public class Invitation implements Serializable {
         this.personne1 = personne1;
     }
 
+    public Personne getPersonne2() {
+        return personne2;
+    }
+
+    public void setPersonne2(Personne personne2) {
+        this.personne2 = personne2;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (invitationPK != null ? invitationPK.hashCode() : 0);
+        hash += (amisPK != null ? amisPK.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Invitation)) {
+        if (!(object instanceof Amis)) {
             return false;
         }
-        Invitation other = (Invitation) object;
-        if ((this.invitationPK == null && other.invitationPK != null) || (this.invitationPK != null && !this.invitationPK.equals(other.invitationPK))) {
+        Amis other = (Amis) object;
+        if ((this.amisPK == null && other.amisPK != null) || (this.amisPK != null && !this.amisPK.equals(other.amisPK))) {
             return false;
         }
         return true;
@@ -79,7 +91,7 @@ public class Invitation implements Serializable {
 
     @Override
     public String toString() {
-        return "entities.Invitation[ invitationPK=" + invitationPK + " ]";
+        return "entities.Amis[ amisPK=" + amisPK + " ]";
     }
-    
+
 }

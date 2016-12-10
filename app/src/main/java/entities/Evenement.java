@@ -7,37 +7,29 @@ package entities;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
+
 
 /**
  *
- * @author mkass
+ * @author ilias
  */
+
 public class Evenement implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
     private Integer id;
-
     private String titre;
-
     private String text;
-
     private Date dateDeCreation;
-
     private Date dateEvenement;
-
     private Date heure;
-
     private Integer nombreInvitesMax;
-
-    private Personne organisateur;
-
+  //  @OneToMany(cascade = CascadeType.ALL, mappedBy = "evenement1", fetch = FetchType.LAZY)
+  //  private List<Participation> participationList;
     private GenreDEvenement genre;
-
     private Lieu lieu;
-
-    private List<EvenementInvitation> evenementInvitationList;
+    private Personne organisateur;
+    
 
     public Evenement() {
     }
@@ -107,13 +99,7 @@ public class Evenement implements Serializable {
         this.nombreInvitesMax = nombreInvitesMax;
     }
 
-    public Personne getOrganisateur() {
-        return organisateur;
-    }
-
-    public void setOrganisateur(Personne organisateur) {
-        this.organisateur = organisateur;
-    }
+    
 
     public GenreDEvenement getGenre() {
         return genre;
@@ -131,13 +117,22 @@ public class Evenement implements Serializable {
         this.lieu = lieu;
     }
 
+    public Personne getOrganisateur() {
+        return organisateur;
+    }
+
+    public void setOrganisateur(Personne organisateur) {
+        this.organisateur = organisateur;
+    }
+
+    /*@XmlTransient
     public List<EvenementInvitation> getEvenementInvitationList() {
         return evenementInvitationList;
     }
 
     public void setEvenementInvitationList(List<EvenementInvitation> evenementInvitationList) {
         this.evenementInvitationList = evenementInvitationList;
-    }
+    }*/
 
     @Override
     public int hashCode() {
@@ -163,5 +158,5 @@ public class Evenement implements Serializable {
     public String toString() {
         return "entities.Evenement[ id=" + id + " ]";
     }
-
+    
 }

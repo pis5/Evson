@@ -1,51 +1,35 @@
-
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package entities;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
+
+
+/**
+ *
+ * @author ilias
+ */
 
 public class Personne implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     private Integer id;
-
     private String nom;
-
     private String prenom;
-
+    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
     private String email;
-
     private String telephone;
-
     private String habite;
-
     private String lieuDeNaissance;
-
     private Date dateDeNaissance;
-
     private Date dateDEnregistrement;
-
     private String motDePasse;
-
     private byte[] photo;
-
-    private List<Personne> personneList;
-
-    private List<Personne> personneList1;
-
-    private List<Personne> personneList2;
-
-    private List<Personne> personneList3;
-
-    private List<Invitation> invitationList;
-
-    private List<Evenement> evenementList;
-
-    private List<EvenementInvitation> evenementInvitationList;
-
-    private List<EvenementInvitation> evenementInvitationList1;
 
     public Personne() {
     }
@@ -150,76 +134,7 @@ public class Personne implements Serializable {
         this.photo = photo;
     }
 
-
-    public List<Personne> getPersonneList() {
-        return personneList;
-    }
-
-    public void setPersonneList(List<Personne> personneList) {
-        this.personneList = personneList;
-    }
-
-
-    public List<Personne> getPersonneList1() {
-        return personneList1;
-    }
-
-    public void setPersonneList1(List<Personne> personneList1) {
-        this.personneList1 = personneList1;
-    }
-
-    public List<Personne> getPersonneList2() {
-        return personneList2;
-    }
-
-    public void setPersonneList2(List<Personne> personneList2) {
-        this.personneList2 = personneList2;
-    }
-
-
-    public List<Personne> getPersonneList3() {
-        return personneList3;
-    }
-
-    public void setPersonneList3(List<Personne> personneList3) {
-        this.personneList3 = personneList3;
-    }
-
-
-    public List<Invitation> getInvitationList() {
-        return invitationList;
-    }
-
-    public void setInvitationList(List<Invitation> invitationList) {
-        this.invitationList = invitationList;
-    }
-
-
-    public List<Evenement> getEvenementList() {
-        return evenementList;
-    }
-
-    public void setEvenementList(List<Evenement> evenementList) {
-        this.evenementList = evenementList;
-    }
-
-
-    public List<EvenementInvitation> getEvenementInvitationList() {
-        return evenementInvitationList;
-    }
-
-    public void setEvenementInvitationList(List<EvenementInvitation> evenementInvitationList) {
-        this.evenementInvitationList = evenementInvitationList;
-    }
-
-
-    public List<EvenementInvitation> getEvenementInvitationList1() {
-        return evenementInvitationList1;
-    }
-
-    public void setEvenementInvitationList1(List<EvenementInvitation> evenementInvitationList1) {
-        this.evenementInvitationList1 = evenementInvitationList1;
-    }
+  
 
     @Override
     public int hashCode() {
@@ -245,5 +160,5 @@ public class Personne implements Serializable {
     public String toString() {
         return "entities.Personne[ id=" + id + " ]";
     }
-
+    
 }

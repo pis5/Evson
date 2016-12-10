@@ -1,21 +1,30 @@
-
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package entities;
 
 import java.io.Serializable;
+import java.util.Date;
+
 
 /**
  *
- * @author mkass
+ * @author ilias
  */
+
 public class EvenementInvitation implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     protected EvenementInvitationPK evenementInvitationPK;
 
-    private Evenement evenement1;
+    private Date date;
 
     private Personne personne;
+
+    private Evenement evenement1;
 
     private Personne personne1;
 
@@ -38,12 +47,12 @@ public class EvenementInvitation implements Serializable {
         this.evenementInvitationPK = evenementInvitationPK;
     }
 
-    public Evenement getEvenement1() {
-        return evenement1;
+    public Date getDate() {
+        return date;
     }
 
-    public void setEvenement1(Evenement evenement1) {
-        this.evenement1 = evenement1;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public Personne getPersonne() {
@@ -52,6 +61,14 @@ public class EvenementInvitation implements Serializable {
 
     public void setPersonne(Personne personne) {
         this.personne = personne;
+    }
+
+    public Evenement getEvenement1() {
+        return evenement1;
+    }
+
+    public void setEvenement1(Evenement evenement1) {
+        this.evenement1 = evenement1;
     }
 
     public Personne getPersonne1() {
