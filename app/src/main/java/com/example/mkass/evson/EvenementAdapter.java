@@ -30,6 +30,13 @@ public class EvenementAdapter extends RecyclerView.Adapter<EvenementAdapter.MyVi
 
     private List<Evenement> evenements = new ArrayList<Evenement>();
 
+    public List<Evenement> getEvenements() {
+        return evenements;
+    }
+
+    public void setEvenements(List<Evenement> evenements) {
+        this.evenements = evenements;
+    }
 
     @Override
     public int getItemCount() {
@@ -71,6 +78,7 @@ public class EvenementAdapter extends RecyclerView.Adapter<EvenementAdapter.MyVi
             sender = (MyTextView)itemView.findViewById(R.id.sender);
             date = (MyTextView)itemView.findViewById(R.id.date);
             image = (ImageView)itemView.findViewById(R.id.image);
+            profilImage = (ImageView)itemView.findViewById(R.id.imageProfil);
            // profilImage = (ImageView)itemView.findViewById(R.id.profilImage);
 
 
@@ -93,7 +101,7 @@ public class EvenementAdapter extends RecyclerView.Adapter<EvenementAdapter.MyVi
                 sender.setText(ev.getOrganisateur().getNom() +" " + ev.getOrganisateur().getPrenom());
                 if (ev.getOrganisateur().getPhoto() != null) {
                     Bitmap bMap = BitmapFactory.decodeByteArray(ev.getOrganisateur().getPhoto(),0, ev.getOrganisateur().getPhoto().length);
-                    image.setImageBitmap(bMap);
+                    profilImage.setImageBitmap(bMap);
                 }
             }
 
@@ -156,16 +164,6 @@ public class EvenementAdapter extends RecyclerView.Adapter<EvenementAdapter.MyVi
                 }
             }
 
-            @Override
-            public void onFinish() {/*
-                Gson gson = new Gson();
-                RequestParams params = new RequestParams();
-                params.put("personne", gson.toJson(pers));
-                params.put("offset", gson.toJson(evenements.size()-1));
-                params.put("nbre", gson.toJson(nbre));
-                params.put("plusAncien", gson.toJson(plusAncien));
-                client.get( context.getString(R.string.ipAdress) +"/evenementsamis/afficher",params ,this);*/
-            }
         };
         client.get( ip +"/evenementsamis/afficher",params ,RH);
 

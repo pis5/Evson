@@ -25,6 +25,10 @@ import entities.Personne;
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private boolean loading = true;
+    int pastVisiblesItems, visibleItemCount, totalItemCount;
+    LinearLayoutManager mLayoutManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,17 +56,42 @@ public class HomeActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
-        Personne pers = (Personne)getIntent().getSerializableExtra("personne");
+        final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
 
         Log.i("Attention!!!!!", "tests test remplis");
         final RecyclerView rv  = (RecyclerView)findViewById(R.id.list);
-        rv.setLayoutManager(new LinearLayoutManager(this));
+        mLayoutManager = new LinearLayoutManager(this);
+        rv.setLayoutManager(mLayoutManager);
 
-        EvenementAdapter adapter = new EvenementAdapter();
+        final EvenementAdapter adapter = new EvenementAdapter();
         adapter.invokeWS(pers, 0, 10,false,this);
         rv.setAdapter(adapter);
 
 
+
+        rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+
+                if(dy > 0) //check for scroll down
+                {
+                    visibleItemCount = mLayoutManager.getChildCount();
+                    totalItemCount = mLayoutManager.getItemCount();
+                    pastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
+
+                    if (loading)
+                    {
+                        if ( (visibleItemCount + pastVisiblesItems) >= totalItemCount)
+                        {
+                            loading = false;
+                            Log.i("Test scroll ...", "Last Item Wow !");
+                            //fetch new data
+                            adapter.invokeWS(pers, adapter.getEvenements().get(adapter.getEvenements().size()-1).getId(), 10,false,getBaseContext());
+                        }
+                    }
+                }
+            }
+        });
 
         final ProgressBar progress = (ProgressBar) findViewById(R.id.progress);
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {

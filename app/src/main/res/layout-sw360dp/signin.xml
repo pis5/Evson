@@ -116,6 +116,7 @@
             android:textColor="#100b20"
             android:background="#0000"
             android:padding="16dp"
+            android:inputType="textEmailAddress"
             android:gravity="left"
             />
 
