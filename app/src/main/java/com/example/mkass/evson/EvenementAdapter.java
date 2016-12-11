@@ -89,11 +89,18 @@ public class EvenementAdapter extends RecyclerView.Adapter<EvenementAdapter.MyVi
             currentEv = ev;
             title.setText(ev.getTitre());
             description.setText(ev.getText());
-            sender.setText(ev.getOrganisateur().getNom() +" " + ev.getOrganisateur().getPrenom());
-            date.setText(sdf.format(ev.getDateDeCreation()));
+            if(ev.getOrganisateur() != null){
+                sender.setText(ev.getOrganisateur().getNom() +" " + ev.getOrganisateur().getPrenom());
+                if (ev.getOrganisateur().getPhoto() != null) {
+                    Bitmap bMap = BitmapFactory.decodeByteArray(ev.getOrganisateur().getPhoto(),0, ev.getOrganisateur().getPhoto().length);
+                    image.setImageBitmap(bMap);
+                }
+            }
 
-            Bitmap bMap = BitmapFactory.decodeByteArray(ev.getOrganisateur().getPhoto(),0, ev.getOrganisateur().getPhoto().length);
-            image.setImageBitmap(bMap);
+            if(ev.getDateDeCreation()!=null)
+                date.setText(sdf.format(ev.getDateDeCreation()));
+
+
         }
     }
 
@@ -102,10 +109,11 @@ public class EvenementAdapter extends RecyclerView.Adapter<EvenementAdapter.MyVi
 
         //Request parameters
         final RequestParams params = new RequestParams();
-        params.put("personne", pers);
-        params.put("offset", offset);
-        params.put("nbre", nbre);
-        params.put("plusAncien", plusAncien);
+        Gson gson = new Gson();
+        params.put("personne", gson.toJson(pers));
+        params.put("offset", gson.toJson(evenements.size()-1));
+        params.put("nbre", gson.toJson(nbre));
+        params.put("plusAncien", gson.toJson(plusAncien));
         // Show Progress Dialog
         // Make RESTful webservice call using AsyncHttpClient object
         final AsyncHttpClient client = new AsyncHttpClient();
@@ -117,16 +125,16 @@ public class EvenementAdapter extends RecyclerView.Adapter<EvenementAdapter.MyVi
                 // JSON Object
                 Gson gson = new Gson();
                 // When the JSON response has status boolean value assigned with true
-                if((!response.equals(""))&&!response.equals(null)){
+                if(!response.equals("")&& !response.equals(null) && !response.equals("[]")){
                     //
                     Type type = new TypeToken<List<Evenement>>(){}.getType();
                     List<Evenement> L = gson.fromJson(response, type);
-                    Log.i("Attention!!!!!", "Evenements ajoutés");
                     evenements.addAll(L);
+                    notifyDataSetChanged();
                 }
                 // Else display error message
                 else{
-                    Toast.makeText(context, "No events to show", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Nothing to show here!!", Toast.LENGTH_LONG).show();
                 }
             }
             // When the response returned by REST has Http response code other than '200'
@@ -140,7 +148,7 @@ public class EvenementAdapter extends RecyclerView.Adapter<EvenementAdapter.MyVi
                 }
                 // When Http response code is '500'
                 else if(statusCode == 500){
-                     Toast.makeText(context, "Something went wrong at server end", Toast.LENGTH_LONG).show();
+                     Toast.makeText(context, "Something went wrong at server end 2 ", Toast.LENGTH_LONG).show();
                 }
                 // When Http response code other than 404, 500
                 else{
@@ -149,13 +157,14 @@ public class EvenementAdapter extends RecyclerView.Adapter<EvenementAdapter.MyVi
             }
 
             @Override
-            public void onFinish() {
+            public void onFinish() {/*
+                Gson gson = new Gson();
                 RequestParams params = new RequestParams();
-                params.put("personne", pers);
-                params.put("offset", evenements.size()-1);
-                params.put("nbre", nbre);
-                params.put("plusAncien", plusAncien);
-                client.get( context.getString(R.string.ipAdress) +"/evenementsamis/afficher",params ,this);
+                params.put("personne", gson.toJson(pers));
+                params.put("offset", gson.toJson(evenements.size()-1));
+                params.put("nbre", gson.toJson(nbre));
+                params.put("plusAncien", gson.toJson(plusAncien));
+                client.get( context.getString(R.string.ipAdress) +"/evenementsamis/afficher",params ,this);*/
             }
         };
         client.get( ip +"/evenementsamis/afficher",params ,RH);

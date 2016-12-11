@@ -59,7 +59,7 @@ public class HomeActivity extends AppCompatActivity
         rv.setLayoutManager(new LinearLayoutManager(this));
 
         EvenementAdapter adapter = new EvenementAdapter();
-        adapter.invokeWS(pers, 0, 10,true,this);
+        adapter.invokeWS(pers, 0, 10,false,this);
         rv.setAdapter(adapter);
 
 
