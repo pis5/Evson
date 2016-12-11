@@ -84,9 +84,25 @@ public class HomeActivity extends AppCompatActivity
                         if ( (visibleItemCount + pastVisiblesItems) >= totalItemCount)
                         {
                             loading = false;
-                            Log.i("Test scroll ...", "Last Item Wow !");
+                            Log.i("Test scroll down...", "Last Item Wow !");
                             //fetch new data
-                            adapter.invokeWS(pers, adapter.getEvenements().get(adapter.getEvenements().size()-1).getId(), 10,false,getBaseContext());
+                            adapter.invokeWS(pers, adapter.getEvenements().get(adapter.getEvenements().size()-1).getId(), 10,true,getBaseContext());
+                        }
+                    }
+                }
+                else
+                {
+                    visibleItemCount = mLayoutManager.getChildCount();
+                    totalItemCount = mLayoutManager.getItemCount();
+                    pastVisiblesItems = mLayoutManager.findLastVisibleItemPosition();
+                    if (loading)
+                    {
+                        if ( (visibleItemCount + pastVisiblesItems) >= totalItemCount)
+                        {
+                            loading = false;
+                            Log.i("Test scroll up...", "Last Item Wow !");
+                            //fetch new data
+                            adapter.invokeWS(pers, adapter.getEvenements().get(0).getId(), 10,false,getBaseContext());
                         }
                     }
                 }

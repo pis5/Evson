@@ -137,7 +137,10 @@ public class EvenementAdapter extends RecyclerView.Adapter<EvenementAdapter.MyVi
                     //
                     Type type = new TypeToken<List<Evenement>>(){}.getType();
                     List<Evenement> L = gson.fromJson(response, type);
-                    evenements.addAll(L);
+                    if(plusAncien == true)
+                        evenements.addAll(evenements.size(),L);
+                    else
+                        evenements.addAll(0, L);
                     notifyDataSetChanged();
                 }
                 // Else display error message
