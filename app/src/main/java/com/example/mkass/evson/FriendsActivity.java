@@ -18,12 +18,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import java.util.List;
-
-import entities.Evenement;
 import entities.Personne;
 
-public class HomeActivity extends AppCompatActivity
+public class FriendsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private boolean loading = true;
@@ -36,7 +33,7 @@ public class HomeActivity extends AppCompatActivity
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("My Events");
+        getSupportActionBar().setTitle("My Friends");
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -64,51 +61,13 @@ public class HomeActivity extends AppCompatActivity
         mLayoutManager = new LinearLayoutManager(this);
         rv.setLayoutManager(mLayoutManager);
 
-        final EvenementAdapter adapter = new EvenementAdapter();
-        adapter.invokeWS(pers, 0, 10,false,this);
+        final AmisAdapter adapter = new AmisAdapter();
+        adapter.invokeWS(pers, this);
         rv.setAdapter(adapter);
 
 
 
-        rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 
-                if(dy > 0) //check for scroll down
-                {
-                    visibleItemCount = mLayoutManager.getChildCount();
-                    totalItemCount = mLayoutManager.getItemCount();
-                    pastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
-
-                    if (loading)
-                    {
-                        if ( (visibleItemCount + pastVisiblesItems) >= totalItemCount)
-                        {
-                            loading = false;
-                            Log.i("Test scroll down...", "Last Item Wow !");
-                            //fetch new data
-                            adapter.invokeWS(pers, adapter.getEvenements().get(adapter.getEvenements().size()-1).getId(), 10,true,getBaseContext());
-                        }
-                    }
-                }
-                else
-                {
-                    visibleItemCount = mLayoutManager.getChildCount();
-                    totalItemCount = mLayoutManager.getItemCount();
-                    pastVisiblesItems = mLayoutManager.findLastVisibleItemPosition();
-                    if (loading)
-                    {
-                        if ( (visibleItemCount + pastVisiblesItems) >= totalItemCount)
-                        {
-                            loading = false;
-                            Log.i("Test scroll up...", "Last Item Wow !");
-                            //fetch new data
-                            adapter.invokeWS(pers, adapter.getEvenements().get(0).getId(), 10,false,getBaseContext());
-                        }
-                    }
-                }
-            }
-        });
 
         final ProgressBar progress = (ProgressBar) findViewById(R.id.progress);
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
@@ -158,19 +117,17 @@ public class HomeActivity extends AppCompatActivity
         int id = item.getItemId();
         if (id == R.id.nav_home) {
             final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
-            Intent it = new Intent(HomeActivity.this, HomeActivity.class);
+           Intent it = new Intent(FriendsActivity.this, HomeActivity.class);
             it.putExtra("personne",pers);
             startActivity(it);
-
         }
         else if (id == R.id.nav_friends){
             final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
-            Intent it = new Intent(HomeActivity.this, FriendsActivity.class);
+            Intent it = new Intent(FriendsActivity.this, FriendsActivity.class);
             it.putExtra("personne",pers);
             startActivity(it);
         }
-        else
-        if (id == R.id.nav_camera) {
+        else if (id == R.id.nav_camera) {
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
 
