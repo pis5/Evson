@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -19,7 +20,7 @@ import android.widget.ProgressBar;
 
 import entities.Personne;
 
-public class HomeActivity extends AppCompatActivity
+public class FriendsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private boolean loading = true;
@@ -29,20 +30,17 @@ public class HomeActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_friends);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("My Events");
-
-        final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
+        getSupportActionBar().setTitle("My Friends");
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent it = new Intent(HomeActivity.this, NewEventActivity.class);
-                it.putExtra("personne",pers);
-                startActivity(it);
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
         });
 
@@ -56,60 +54,22 @@ public class HomeActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
+        final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
 
-
-        final RecyclerView rv  = (RecyclerView)findViewById(R.id.list);
+        Log.i("Attention!!!!!", "tests test remplis");
+        final RecyclerView rv  = (RecyclerView)findViewById(R.id.listAmis);
         mLayoutManager = new LinearLayoutManager(this);
         rv.setLayoutManager(mLayoutManager);
 
-        final EvenementAdapter adapter = new EvenementAdapter();
-        adapter.invokeWS(pers, 0, 10,false,this);
+        final AmisAdapter adapter = new AmisAdapter();
+        adapter.invokeWS(pers, this);
         rv.setAdapter(adapter);
 
 
 
-        rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 
-                if(dy > 0) //check for scroll down
-                {
-                    visibleItemCount = mLayoutManager.getChildCount();
-                    totalItemCount = mLayoutManager.getItemCount();
-                    pastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
 
-                    if (loading)
-                    {
-                        if ( (visibleItemCount + pastVisiblesItems) >= totalItemCount)
-                        {
-                            loading = false;
-                            Log.i("Test scroll down...", "Last Item Wow !");
-                            //fetch new data
-                            //adapter.invokeWS(pers, adapter.getEvenements().get(0).getId(), 3,true,getBaseContext());
-                        }
-                    }
-                }
-                else
-                {
-                    visibleItemCount = mLayoutManager.getChildCount();
-                    totalItemCount = mLayoutManager.getItemCount();
-                    pastVisiblesItems = mLayoutManager.findLastVisibleItemPosition();
-                    if (loading)
-                    {
-                        if ( (visibleItemCount + pastVisiblesItems) >= totalItemCount)
-                        {
-                            loading = false;
-                            Log.i("Test scroll up...", "Last Item Wow !");
-                            //fetch new data
-                            adapter.invokeWS(pers, adapter.getEvenements().get(adapter.getEvenements().size()-1).getId(), 3,true,getBaseContext());
-
-                        }
-                    }
-                }
-            }
-        });
-
-        final ProgressBar progress = (ProgressBar) findViewById(R.id.progress);
+        final ProgressBar progress = (ProgressBar) findViewById(R.id.progressAmis);
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
@@ -157,23 +117,21 @@ public class HomeActivity extends AppCompatActivity
         int id = item.getItemId();
         if (id == R.id.nav_home) {
             final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
-            Intent it = new Intent(HomeActivity.this, HomeActivity.class);
+           Intent it = new Intent(FriendsActivity.this, HomeActivity.class);
             it.putExtra("personne",pers);
             startActivity(it);
-
         }
         else if (id == R.id.nav_friends){
             final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
-            Intent it = new Intent(HomeActivity.this, FriendsActivity.class);
+            Intent it = new Intent(FriendsActivity.this, FriendsActivity.class);
             it.putExtra("personne",pers);
             startActivity(it);
         }
-        else
-        if (id == R.id.nav_camera) {
+        else if (id == R.id.nav_camera) {
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
 
-        } else if (id == R.id.nav_profile) {
+        } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
 

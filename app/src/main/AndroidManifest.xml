@@ -40,6 +40,10 @@
             android:name=".NewEventActivity"
             android:label="@string/title_activity_new_event"
             android:theme="@style/AppTheme"></activity>
+        <activity
+            android:name=".FriendsActivity"
+            android:label="@string/title_activity_friends"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>
