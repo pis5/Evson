@@ -21,7 +21,7 @@ import android.widget.ProgressBar;
 
 import entities.Personne;
 
-public class FriendsActivity extends AppCompatActivity
+public class AddFriendsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private boolean loading = true;
@@ -65,7 +65,7 @@ public class FriendsActivity extends AppCompatActivity
         MesAmis.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent it = new Intent(FriendsActivity.this, FriendsActivity.class);
+                Intent it = new Intent(AddFriendsActivity.this, FriendsActivity.class);
                 it.putExtra("personne",pers);
                 startActivity(it);
 
@@ -76,7 +76,7 @@ public class FriendsActivity extends AppCompatActivity
         AjouterAmi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent it = new Intent(FriendsActivity.this, AddFriendsActivity.class);
+                Intent it = new Intent(AddFriendsActivity.this, AddFriendsActivity.class);
                 it.putExtra("personne",pers);
                 startActivity(it);
 
@@ -88,7 +88,7 @@ public class FriendsActivity extends AppCompatActivity
         Demandes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent it = new Intent(FriendsActivity.this, InvitesFriendsActivity.class);
+                Intent it = new Intent(AddFriendsActivity.this, InvitesFriendsActivity.class);
                 it.putExtra("personne",pers);
                 startActivity(it);
 
@@ -100,7 +100,7 @@ public class FriendsActivity extends AppCompatActivity
         mLayoutManager = new LinearLayoutManager(this);
         rv.setLayoutManager(mLayoutManager);
 
-        final AmisAdapter adapter = new AmisAdapter(pers, this);
+        final AmisAdapter adapter = new AmisAdapter(pers,this);
         adapter.invokeWS(pers, this);
         rv.setAdapter(adapter);
 
@@ -156,13 +156,13 @@ public class FriendsActivity extends AppCompatActivity
         int id = item.getItemId();
         if (id == R.id.nav_home) {
             final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
-           Intent it = new Intent(FriendsActivity.this, HomeActivity.class);
+           Intent it = new Intent(AddFriendsActivity.this, HomeActivity.class);
             it.putExtra("personne",pers);
             startActivity(it);
         }
         else if (id == R.id.nav_friends){
             final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
-            Intent it = new Intent(FriendsActivity.this, FriendsActivity.class);
+            Intent it = new Intent(AddFriendsActivity.this, FriendsActivity.class);
             it.putExtra("personne",pers);
             startActivity(it);
         }

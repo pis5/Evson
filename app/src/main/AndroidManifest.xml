@@ -35,6 +35,14 @@
             android:name=".FriendsActivity"
             android:label="@string/title_activity_friends"
             android:theme="@style/AppTheme"></activity>
+        <activity
+            android:name=".AddFriendsActivity"
+            android:label="@string/title_activity_friends"
+            android:theme="@style/AppTheme"></activity>
+        <activity
+            android:name=".InvitesFriendsActivity"
+            android:label="@string/title_activity_friends"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

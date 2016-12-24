@@ -31,15 +31,24 @@
                         <ImageButton
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            app:srcCompat="@mipmap/default_user"
+                            app:srcCompat="@mipmap/ic_amis"
                             android:id="@+id/imageButtonMesAmis"
                             android:layout_weight="1"
                             />
                         <ImageButton
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            app:srcCompat="@android:drawable/ic_input_add"
+                            app:srcCompat="@mipmap/ic_addnewfriends"
                             android:id="@+id/imageButtonAjouterAmis"
+                            android:layout_weight="1"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            />
+                        <ImageButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:srcCompat="@mipmap/ic_addfriend"
+                            android:id="@+id/imageButtonDemandesAmis"
                             android:layout_weight="1"
                             android:layout_alignParentEnd="true"
                             android:layout_alignParentRight="true"

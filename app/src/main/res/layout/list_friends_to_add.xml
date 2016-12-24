@@ -43,7 +43,7 @@
                     >
 
                     <customfonts.MyTextView
-                        android:id="@+id/nomComplet"
+                        android:id="@+id/nomCompletPersonneToAdd"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Trump’s Plan for AmericanMade iPhonew Wold Be Disastrous. Trump’s Plan for AmericanMade iPhonew Wold Be Disastrous"
@@ -55,7 +55,7 @@
                         />
 
                     <customfonts.MyTextView
-                        android:id="@+id/infosPersonne"
+                        android:id="@+id/infosPersonneToAdd"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Why even a President Trump couldn’t make Apple manufacture iPhone in the state."
@@ -67,10 +67,10 @@
 
 
                     <Button
-                        android:text="Supprimer"
+                        android:text="Ajouter"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/button_supprimer_de_liste_amis" />
+                        android:id="@+id/button_ajouter_a_liste_amis" />
 
 
                 </LinearLayout>
@@ -85,7 +85,7 @@
 
                     <ImageView
 
-                        android:id="@+id/imagePersonne"
+                        android:id="@+id/imagePersonneToAdd"
 
                         android:layout_width="250px"
                         android:layout_height="250px"

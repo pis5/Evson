@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -29,7 +30,15 @@ import entities.Personne;
 
 public class AmisAdapter extends RecyclerView.Adapter<AmisAdapter.MyViewHolder> {
 
+    private Personne me;
+    private Context context;
+
     private List<Personne> amis = new ArrayList<Personne>();
+
+    public AmisAdapter(Personne pers, Context context) {
+        me= pers;
+        this.context=context;
+    }
 
     public List<Personne> getAmis() {
         return amis;
@@ -64,6 +73,7 @@ public class AmisAdapter extends RecyclerView.Adapter<AmisAdapter.MyViewHolder> 
         MyTextView NomComplet;
         MyTextView description;
         ImageView image;
+        Button supprimer;
 
 
 
@@ -77,8 +87,10 @@ public class AmisAdapter extends RecyclerView.Adapter<AmisAdapter.MyViewHolder> 
             NomComplet = (MyTextView)itemView.findViewById(R.id.nomComplet);
             description = (MyTextView)itemView.findViewById(R.id.infosPersonne);
             image = (ImageView)itemView.findViewById(R.id.imagePersonne);
+            supprimer= (Button) itemView.findViewById(R.id.button_supprimer_de_liste_amis);
 
-           // profilImage = (ImageView)itemView.findViewById(R.id.profilImage);
+
+
 
 
 
@@ -90,7 +102,9 @@ public class AmisAdapter extends RecyclerView.Adapter<AmisAdapter.MyViewHolder> 
             });
         }
 
-        public void display(Personne a) {
+
+
+        public void display(final Personne a) {
             SimpleDateFormat sdf = new SimpleDateFormat("dd/M/yyyy");
 
             currentA = a;
@@ -114,12 +128,83 @@ public class AmisAdapter extends RecyclerView.Adapter<AmisAdapter.MyViewHolder> 
                     image.setImageBitmap(bMap);
                 }
 
+            supprimer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.i("hi","how you doing");
+                    // appel WS suppression;
+                    invokeDelete(me,a);
+                }
+            });
 
 
 
 
         }
     }
+
+
+    public void invokeDelete(Personne pers, final Personne ASupprimer ){
+
+        //Request parameters
+        final RequestParams params = new RequestParams();
+        Gson gson = new Gson();
+        params.put("personne", gson.toJson(pers));
+        params.put("personneasupprimer", gson.toJson(ASupprimer));
+
+        // Show Progress Dialog
+        // Make RESTful webservice call using AsyncHttpClient object
+        final AsyncHttpClient client = new AsyncHttpClient();
+        final String ip = context.getString(R.string.ipAdress);
+        AsyncHttpResponseHandler RH=new AsyncHttpResponseHandler() {
+            // When the response returned by REST has Http response code '200'
+            @Override
+            public void onSuccess(String response) {
+                // JSON Object
+                Gson gson = new Gson();
+                // When the JSON response has status boolean value assigned with true
+
+                if(response.equals("deleted")){
+                    //
+
+                    boolean b=amis.remove(ASupprimer);
+                    Log.i("l", Boolean.toString(b));
+                    notifyDataSetChanged();
+                }
+                // Else display error message
+                else{
+                    Toast.makeText(context, "Nothing to show here!!", Toast.LENGTH_LONG).show();
+                }
+            }
+            // When the response returned by REST has Http response code other than '200'
+            @Override
+            public void onFailure(int statusCode, Throwable error,
+                                  String content) {
+
+
+                // Hide Progress Dialog
+                // When Http response code is '404'
+                if(statusCode == 404){
+
+                     Toast.makeText(context, "Requested resource not found", Toast.LENGTH_LONG).show();
+                }
+                // When Http response code is '500'
+                else if(statusCode == 500){
+
+                     Toast.makeText(context, "Something went wrong at server end 2 ", Toast.LENGTH_LONG).show();
+                }
+                // When Http response code other than 404, 500
+                else{
+
+                     Toast.makeText(context, "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]", Toast.LENGTH_LONG).show();
+                }
+            }
+
+        };
+        client.get( ip +"/amis/delete",params ,RH);
+
+    }
+
 
 
     public void invokeWS(final Personne pers, final Context context){
@@ -159,15 +244,15 @@ public class AmisAdapter extends RecyclerView.Adapter<AmisAdapter.MyViewHolder> 
                 // Hide Progress Dialog
                 // When Http response code is '404'
                 if(statusCode == 404){
-                     Toast.makeText(context, "Requested resource not found", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Requested resource not found", Toast.LENGTH_LONG).show();
                 }
                 // When Http response code is '500'
                 else if(statusCode == 500){
-                     Toast.makeText(context, "Something went wrong at server end 2 ", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Something went wrong at server end 2 ", Toast.LENGTH_LONG).show();
                 }
                 // When Http response code other than 404, 500
                 else{
-                     Toast.makeText(context, "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]", Toast.LENGTH_LONG).show();
                 }
             }
 
