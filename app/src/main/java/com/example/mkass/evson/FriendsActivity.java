@@ -57,7 +57,7 @@ public class FriendsActivity extends AppCompatActivity
         final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
 
         Log.i("Attention!!!!!", "tests test remplis");
-        final RecyclerView rv  = (RecyclerView)findViewById(R.id.list);
+        final RecyclerView rv  = (RecyclerView)findViewById(R.id.listAmis);
         mLayoutManager = new LinearLayoutManager(this);
         rv.setLayoutManager(mLayoutManager);
 
@@ -69,7 +69,7 @@ public class FriendsActivity extends AppCompatActivity
 
 
 
-        final ProgressBar progress = (ProgressBar) findViewById(R.id.progress);
+        final ProgressBar progress = (ProgressBar) findViewById(R.id.progressAmis);
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
