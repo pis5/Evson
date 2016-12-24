@@ -278,8 +278,8 @@ public class NewEventActivity extends AppCompatActivity
                 Gson gson = new Gson();
                 // When the JSON response has status boolean value assigned with true
 
-                if(response.equals("added")){
-                    //
+                if(response.equals("created")){
+                    finish();
                 }
                 // Else display error message
                 else{
@@ -300,7 +300,7 @@ public class NewEventActivity extends AppCompatActivity
                 }
                 // When Http response code is '500'
                 else if(statusCode == 500){
-                    Log.i("l", "Something went wrong at server end 2 ");
+                    Log.i("l", "Something went wrong at server end ");
                     //Toast.makeText(context, "Something went wrong at server end 2 ", Toast.LENGTH_LONG).show();
                 }
                 // When Http response code other than 404, 500
@@ -309,7 +309,6 @@ public class NewEventActivity extends AppCompatActivity
                     //Toast.makeText(context, "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]", Toast.LENGTH_LONG).show();
                 }
             }
-
         };
         client.get( ip +"/mesevenements/createEvent",params ,RH);
     }
