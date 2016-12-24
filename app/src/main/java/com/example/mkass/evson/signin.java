@@ -143,9 +143,11 @@ public class signin extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), P.getNom()+" "+P.getPrenom()+ " connecté", Toast.LENGTH_LONG).show();
 
 
-                            Intent it = new Intent(signin.this, HomeActivity.class);
-                            it.putExtra("personne",P);
-                            startActivity(it);
+                        Intent it = new Intent(signin.this, HomeActivity.class);
+                        //it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        it.putExtra("personne",P);
+                        startActivity(it);
+                        finish();
                     }
                     // Else display error message
                     else{

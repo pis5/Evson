@@ -19,9 +19,9 @@
             android:icon="@drawable/ic_menu_gallery"
             android:title="My program" />
         <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/ic_menu_key"
+            android:title="My profile" />
         <item
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_menu_manage"

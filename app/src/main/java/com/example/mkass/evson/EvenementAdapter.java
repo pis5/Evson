@@ -141,6 +141,7 @@ public class EvenementAdapter extends RecyclerView.Adapter<EvenementAdapter.MyVi
                         evenements.addAll(evenements.size(),L);
                     else
                         evenements.addAll(0, L);
+                    Log.i("Liste actuelle", evenements.toString());
                     notifyDataSetChanged();
                 }
                 // Else display error message
