@@ -1,9 +1,9 @@
 package com.example.mkass.evson;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -17,9 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import java.util.List;
-
-import entities.Evenement;
 import entities.Personne;
 
 public class HomeActivity extends AppCompatActivity
@@ -37,12 +34,15 @@ public class HomeActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("My Events");
 
+        final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent it = new Intent(HomeActivity.this, NewEventActivity.class);
+                it.putExtra("personne",pers);
+                startActivity(it);
             }
         });
 
@@ -56,9 +56,8 @@ public class HomeActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
-        final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
 
-        Log.i("Attention!!!!!", "tests test remplis");
+
         final RecyclerView rv  = (RecyclerView)findViewById(R.id.list);
         mLayoutManager = new LinearLayoutManager(this);
         rv.setLayoutManager(mLayoutManager);
@@ -86,7 +85,7 @@ public class HomeActivity extends AppCompatActivity
                             loading = false;
                             Log.i("Test scroll down...", "Last Item Wow !");
                             //fetch new data
-                            adapter.invokeWS(pers, adapter.getEvenements().get(adapter.getEvenements().size()-1).getId(), 10,true,getBaseContext());
+                            //adapter.invokeWS(pers, adapter.getEvenements().get(0).getId(), 3,true,getBaseContext());
                         }
                     }
                 }
@@ -102,7 +101,8 @@ public class HomeActivity extends AppCompatActivity
                             loading = false;
                             Log.i("Test scroll up...", "Last Item Wow !");
                             //fetch new data
-                            adapter.invokeWS(pers, adapter.getEvenements().get(0).getId(), 10,false,getBaseContext());
+                            adapter.invokeWS(pers, adapter.getEvenements().get(adapter.getEvenements().size()-1).getId(), 3,true,getBaseContext());
+
                         }
                     }
                 }
@@ -160,7 +160,7 @@ public class HomeActivity extends AppCompatActivity
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_profile) {
 
         } else if (id == R.id.nav_manage) {
 

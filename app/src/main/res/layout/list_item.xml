@@ -29,25 +29,23 @@
 
             <LinearLayout
 
-                android:layout_width="327dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <ImageView
                     android:id="@+id/imageProfil"
-                    android:layout_width="45px"
-                    android:layout_height="45px"
+                    android:layout_width="65px"
                     android:src="@mipmap/default_user"
                     android:scaleType="centerCrop"
-                    />
+                    android:layout_height="65px" />
 
                 <customfonts.MyTextView
                     android:id="@+id/sender"
                     android:layout_marginLeft="16dp"
-                    android:layout_weight="1"
-                    android:layout_width="match_parent"
+                    android:layout_width="124dp"
                     android:layout_height="wrap_content"
-                    android:text="Fox News ."
+                    android:text="Nom et Prénom"
                     android:textColor="@color/listsub1"
                     android:textSize="14dp"
                     android:layout_gravity="center"
@@ -62,6 +60,7 @@
                     android:textColor="@color/listsub1"
                     android:textSize="14dp"
                     android:layout_gravity="center"
+                    android:gravity="right"
                     />
 
                 <ImageView
@@ -73,7 +72,6 @@
                     android:layout_gravity="center"
                     />
             </LinearLayout>
-
 
 
             <LinearLayout
@@ -94,23 +92,24 @@
                         android:id="@+id/title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Trump’s Plan for AmericanMade iPhonew Wold Be Disastrous. Trump’s Plan for AmericanMade iPhonew Wold Be Disastrous"
-                        android:lines="3"
+                        android:text="Titre de l'evenement"
+                        android:lines="1"
                         android:textSize="17dp"
                         android:textColor="@color/listtext"
-                        android:lineSpacingExtra="3dp"
                         android:maxLines="3"
+                        android:ellipsize="end"
                         />
 
                     <customfonts.MyTextView
                         android:id="@+id/description"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Why even a President Trump couldn’t make Apple manufacture iPhone in the state."
+                        android:text="Description de l'évènement"
                         android:layout_marginTop="13dp"
+                        android:lines="2"
+                        android:ellipsize="end"
                         android:textSize="13dp"
                         android:textColor="@color/listsub1"
-                        android:lineSpacingExtra="3dp"
                         />
 
 
@@ -118,39 +117,11 @@
                         android:id="@+id/intrest"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="You've shown interest in iPhone"
+                        android:text="0 comments | 0 likes"
                         android:textSize="12dp"
                         android:textColor="@color/listsub2"
                         android:maxLines="1"
                         android:layout_marginTop="13dp"
-                        />
-
-
-
-
-
-
-
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_weight="2.2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-
-                    >
-
-                    <ImageView
-
-                        android:id="@+id/image"
-
-                        android:layout_width="250px"
-                        android:layout_height="250px"
-                        android:src="@mipmap/default_user"
-                        android:scaleType="fitXY"
                         />
 
                 </LinearLayout>

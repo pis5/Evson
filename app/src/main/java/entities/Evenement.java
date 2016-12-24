@@ -11,25 +11,32 @@ import java.util.Date;
 
 /**
  *
- * @author ilias
+ * @author mkass
  */
 
 public class Evenement implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
     private Integer id;
+
     private String titre;
+
     private String text;
+
     private Date dateDeCreation;
+
     private Date dateEvenement;
+
     private Date heure;
+
     private Integer nombreInvitesMax;
-  //  @OneToMany(cascade = CascadeType.ALL, mappedBy = "evenement1", fetch = FetchType.LAZY)
-  //  private List<Participation> participationList;
-    private GenreDEvenement genre;
+
+    private String genre;
+
     private Lieu lieu;
+
     private Personne organisateur;
-    
 
     public Evenement() {
     }
@@ -99,13 +106,11 @@ public class Evenement implements Serializable {
         this.nombreInvitesMax = nombreInvitesMax;
     }
 
-    
-
-    public GenreDEvenement getGenre() {
+    public String getGenre() {
         return genre;
     }
 
-    public void setGenre(GenreDEvenement genre) {
+    public void setGenre(String genre) {
         this.genre = genre;
     }
 
@@ -124,15 +129,6 @@ public class Evenement implements Serializable {
     public void setOrganisateur(Personne organisateur) {
         this.organisateur = organisateur;
     }
-
-    /*@XmlTransient
-    public List<EvenementInvitation> getEvenementInvitationList() {
-        return evenementInvitationList;
-    }
-
-    public void setEvenementInvitationList(List<EvenementInvitation> evenementInvitationList) {
-        this.evenementInvitationList = evenementInvitationList;
-    }*/
 
     @Override
     public int hashCode() {
@@ -158,5 +154,5 @@ public class Evenement implements Serializable {
     public String toString() {
         return "entities.Evenement[ id=" + id + " ]";
     }
-    
+
 }
