@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -33,6 +34,9 @@ import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -274,23 +278,20 @@ public class NewEventActivity extends AppCompatActivity
             // When the response returned by REST has Http response code '200'
             @Override
             public void onSuccess(String response) {
-                // JSON Object
-                Gson gson = new Gson();
-                // When the JSON response has status boolean value assigned with true
+                    // JSON Object
+                    // When the JSON response has status boolean value assigned with true
+                    if(response.equals("created")){
 
-                if(response.equals("created")){
-                    finish();
-                }
-                // Else display error message
-                else{
-                    // Toast.makeText(context, "Nothing to show here!!", Toast.LENGTH_LONG).show();
-                }
+                        Toast.makeText(getApplicationContext(), "Event created successfully!", Toast.LENGTH_LONG).show();
+                        finish();
+                    }
+
+
             }
             // When the response returned by REST has Http response code other than '200'
             @Override
             public void onFailure(int statusCode, Throwable error,
                                   String content) {
-                Log.i("l", "lil");
 
                 // Hide Progress Dialog
                 // When Http response code is '404'
@@ -310,6 +311,6 @@ public class NewEventActivity extends AppCompatActivity
                 }
             }
         };
-        client.get( ip +"/mesevenements/createEvent",params ,RH);
+        client.get( ip +"/mesevents/createEvent",params ,RH);
     }
 }

@@ -6,6 +6,7 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 
 
@@ -16,21 +17,33 @@ import java.util.Date;
 
 public class Personne implements Serializable {
 
+
+    private byte[] photo;
+
+    private Collection<Evenement> evenementCollection;
+
     private static final long serialVersionUID = 1L;
 
     private Integer id;
+
     private String nom;
+
     private String prenom;
     // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
+
     private String email;
+
     private String telephone;
 
     private String habite;
+
     private String lieuDeNaissance;
+
     private Date dateDeNaissance;
+
     private Date dateDEnregistrement;
+
     private String motDePasse;
-    private byte[] photo;
 
     public Personne() {
     }
@@ -127,15 +140,8 @@ public class Personne implements Serializable {
         this.motDePasse = motDePasse;
     }
 
-    public byte[] getPhoto() {
-        return photo;
-    }
 
-    public void setPhoto(byte[] photo) {
-        this.photo = photo;
-    }
 
-  
 
     @Override
     public int hashCode() {
@@ -161,5 +167,21 @@ public class Personne implements Serializable {
     public String toString() {
         return "entities.Personne[ id=" + id + " ]";
     }
-    
+
+    public Collection<Evenement> getEvenementCollection() {
+        return evenementCollection;
+    }
+
+    public void setEvenementCollection(Collection<Evenement> evenementCollection) {
+        this.evenementCollection = evenementCollection;
+    }
+
+    public byte[] getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(byte[] photo) {
+        this.photo = photo;
+    }
+
 }

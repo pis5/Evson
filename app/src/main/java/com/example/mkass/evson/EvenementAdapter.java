@@ -160,7 +160,7 @@ public class EvenementAdapter extends RecyclerView.Adapter<EvenementAdapter.MyVi
                 }
                 // When Http response code is '500'
                 else if(statusCode == 500){
-                     Toast.makeText(context, "Something went wrong at server end 2 ", Toast.LENGTH_LONG).show();
+                     Toast.makeText(context, "Something went wrong at server end !! ", Toast.LENGTH_LONG).show();
                 }
                 // When Http response code other than 404, 500
                 else{
