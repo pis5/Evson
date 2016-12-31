@@ -51,8 +51,6 @@ import entities.Personne;
 public class NewEventActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private int year, month, day;
-    private DatePicker datePicker;
     private static MyEditText dateEvent;
     private static TextView locationView;
     private static MyEditText title;

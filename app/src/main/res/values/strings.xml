@@ -14,8 +14,7 @@
         completions."
     </string>
 
-
-    <string name="ipAdress">http://192.168.1.104:8080/ServiceWebAndroid-war</string>
+    <string name="ipAdress">http://192.168.137.1:8080/ServiceWebAndroid-war</string>
     <string name="title_activity_home">HomeActivity</string>
     <string name="title_activity_friends">FriendsActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
