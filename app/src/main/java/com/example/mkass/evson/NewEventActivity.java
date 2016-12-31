@@ -29,7 +29,9 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -263,7 +265,11 @@ public class NewEventActivity extends AppCompatActivity
     private void invokeAddEvent(Evenement ev){
         //Request parameters
         final RequestParams params = new RequestParams();
-        Gson gson = new Gson();
+        Gson gson =new GsonBuilder()
+                .setPrettyPrinting()
+                .setDateFormat("MMM d, yyyy HH:mm:ss")
+                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                .create();
         params.put("evenement", gson.toJson(ev));
 
         // Show Progress Dialog
@@ -275,7 +281,11 @@ public class NewEventActivity extends AppCompatActivity
             @Override
             public void onSuccess(String response) {
                 // JSON Object
-                Gson gson = new Gson();
+                Gson gson = new GsonBuilder()
+                        .setPrettyPrinting()
+                        .setDateFormat("MMM d, yyyy HH:mm:ss")
+                        .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                        .create();
                 // When the JSON response has status boolean value assigned with true
 
                 if(response.equals("created")){

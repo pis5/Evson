@@ -11,7 +11,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -134,7 +136,11 @@ public class EvenementAdapter extends RecyclerView.Adapter<EvenementAdapter.MyVi
             @Override
             public void onSuccess(String response) {
                 // JSON Object
-                Gson gson = new Gson();
+                Gson gson = new GsonBuilder()
+                        .setPrettyPrinting()
+                        .setDateFormat("MMM d, yyyy HH:mm:ss")
+                        .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                        .create();
                 // When the JSON response has status boolean value assigned with true
                 if(!response.equals("")&& !response.equals(null) && !response.equals("[]")){
                     //

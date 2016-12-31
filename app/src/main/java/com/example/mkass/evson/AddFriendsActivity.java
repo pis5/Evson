@@ -113,7 +113,7 @@ public class AddFriendsActivity extends AppCompatActivity
 
 if(nom!=null && prenom!=null){
         if(!nom.equals("") || !prenom.equals("")){
-            adapter.invokeWS(pers,3,  nom, prenom ,true,getBaseContext());
+            adapter.invokeWS(pers,5,  nom, prenom ,true,getBaseContext());
 
             rv.setAdapter(adapter);
         }}
@@ -139,6 +139,7 @@ if(nom!=null && prenom!=null){
                             loading = false;
                             Log.i("Test scroll down...", "Last Item Wow !");
                             //fetch new data
+                            adapter.invokeWS(pers,3,  nom, prenom ,false,getBaseContext());
                             //adapter.invokeWS(pers, adapter.getEvenements().get(0).getId(), 3,true,getBaseContext());
                         }
                     }
@@ -155,7 +156,7 @@ if(nom!=null && prenom!=null){
                             loading = false;
                             Log.i("Test scroll up...", "Last Item Wow !");
                             //fetch new data
-                            adapter.invokeWS(pers,3,  nom, prenom ,false,getBaseContext());
+
 
                         }
                     }

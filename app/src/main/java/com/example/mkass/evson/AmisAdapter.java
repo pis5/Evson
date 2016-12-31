@@ -12,7 +12,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -211,7 +213,11 @@ public class AmisAdapter extends RecyclerView.Adapter<AmisAdapter.MyViewHolder> 
 
         //Request parameters
         final RequestParams params = new RequestParams();
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .setDateFormat("MMM d, yyyy HH:mm:ss")
+                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                .create();
         params.put("personne", gson.toJson(pers));
 
         // Show Progress Dialog
