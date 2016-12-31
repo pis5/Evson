@@ -113,13 +113,16 @@ public class EvenementAdapter extends RecyclerView.Adapter<EvenementAdapter.MyVi
     }
 
 
-    public void invokeWS(final Personne pers, final int offset, final int nbre, final boolean plusAncien, final Context context){
+    public void invokeWS(final Personne pers,  final int nbre, final boolean plusAncien, final Context context){
 
         //Request parameters
         final RequestParams params = new RequestParams();
         Gson gson = new Gson();
         params.put("personne", gson.toJson(pers));
-        params.put("offset", gson.toJson(evenements.size()-1));
+       if(evenements.size()>0){
+        params.put("offset", gson.toJson(evenements.get(evenements.size()-1).getId()));}
+        else{   params.put("offset",gson.toJson(0));}
+
         params.put("nbre", gson.toJson(nbre));
         params.put("plusAncien", gson.toJson(plusAncien));
         // Show Progress Dialog

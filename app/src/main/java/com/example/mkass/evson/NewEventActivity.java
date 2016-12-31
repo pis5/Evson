@@ -84,7 +84,7 @@ public class NewEventActivity extends AppCompatActivity
         locationView = (MyTextView)findViewById(R.id.location);
         title = (MyEditText)findViewById(R.id.title);
         description = (MyEditText)findViewById(R.id.description);
-        errorView = (MyTextView)findViewById(R.id.location);
+        errorView = (MyTextView)findViewById(R.id.errorMsg);
         spinner = (Spinner)findViewById(R.id.spinner);
 
         dateEvent.setOnClickListener(new View.OnClickListener() {
@@ -279,6 +279,7 @@ public class NewEventActivity extends AppCompatActivity
                 // When the JSON response has status boolean value assigned with true
 
                 if(response.equals("created")){
+
                     finish();
                 }
                 // Else display error message
