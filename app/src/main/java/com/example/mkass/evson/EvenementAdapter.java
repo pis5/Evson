@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -33,6 +34,7 @@ public class EvenementAdapter extends RecyclerView.Adapter<EvenementAdapter.MyVi
 
     private List<Evenement> evenements = new ArrayList<Evenement>();
     private Personne pers;
+    private Context context;
 
     public List<Evenement> getEvenements() {
         return evenements;
@@ -73,12 +75,14 @@ public class EvenementAdapter extends RecyclerView.Adapter<EvenementAdapter.MyVi
         MyTextView date;
         ImageView image;
         ImageView profilImage;
+        Button btnParticipation;
 
         private Evenement currentEv;
 
 
         public MyViewHolder(final View itemView) {
             super(itemView);
+            context = itemView.getContext();
 
             title = (MyTextView)itemView.findViewById(R.id.title);
             description = (MyTextView)itemView.findViewById(R.id.description);
@@ -86,8 +90,16 @@ public class EvenementAdapter extends RecyclerView.Adapter<EvenementAdapter.MyVi
             date = (MyTextView)itemView.findViewById(R.id.date);
             image = (ImageView)itemView.findViewById(R.id.image);
             profilImage = (ImageView)itemView.findViewById(R.id.imageProfil);
+            btnParticipation =(Button)itemView.findViewById(R.id.btn_participer);
            // profilImage = (ImageView)itemView.findViewById(R.id.profilImage);
 
+            if(itemView.getContext() instanceof HomeActivity){
+
+
+            }else{
+                btnParticipation.setVisibility(View.GONE);
+
+            }
 
 
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -100,7 +112,7 @@ public class EvenementAdapter extends RecyclerView.Adapter<EvenementAdapter.MyVi
             });
         }
 
-        public void display(Evenement ev) {
+        public void display(final Evenement ev) {
             SimpleDateFormat sdf = new SimpleDateFormat("dd/M/yyyy");
 
             currentEv = ev;
@@ -116,9 +128,82 @@ public class EvenementAdapter extends RecyclerView.Adapter<EvenementAdapter.MyVi
 
             if(ev.getDateDeCreation()!=null)
                 date.setText(sdf.format(ev.getDateDeCreation()));
-
+            if(itemView.getContext() instanceof HomeActivity) {
+                btnParticipation.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        invokeParticipe(pers, ev, context);
+                    }
+                });
+            }
 
         }
+    }
+
+    private void invokeParticipe(Personne pers, final Evenement ev, final Context context) {
+
+
+        //Request parameters
+        final RequestParams params = new RequestParams();
+        Gson gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .setDateFormat("MMM d, yyyy HH:mm:ss")
+                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                .create();
+
+        params.put("personne", gson.toJson(pers));
+        params.put("evenement", gson.toJson(ev));
+
+        // Show Progress Dialog
+        // Make RESTful webservice call using AsyncHttpClient object
+        final AsyncHttpClient client = new AsyncHttpClient();
+        final String ip = context.getString(R.string.ipAdress);
+        AsyncHttpResponseHandler RH=new AsyncHttpResponseHandler() {
+            // When the response returned by REST has Http response code '200'
+            @Override
+            public void onSuccess(String response) {
+                // JSON Object
+                Gson gson = new Gson();
+                // When the JSON response has status boolean value assigned with true
+
+                if(response.equals("added")){
+                    //
+
+                    boolean b=evenements.remove(ev);
+                    Log.i("l", Boolean.toString(b));
+                    notifyDataSetChanged();
+                }
+                // Else display error message
+                else{
+                    Toast.makeText(context, "Nothing to show here!!", Toast.LENGTH_LONG).show();
+                }
+            }
+            // When the response returned by REST has Http response code other than '200'
+            @Override
+            public void onFailure(int statusCode, Throwable error,
+                                  String content) {
+
+
+                // Hide Progress Dialog
+                // When Http response code is '404'
+                if(statusCode == 404){
+
+                    Toast.makeText(context, "Requested resource not found", Toast.LENGTH_LONG).show();
+                }
+                // When Http response code is '500'
+                else if(statusCode == 500){
+
+                    Toast.makeText(context, "Something went wrong at server end 2 ", Toast.LENGTH_LONG).show();
+                }
+                // When Http response code other than 404, 500
+                else{
+
+                    Toast.makeText(context, "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]", Toast.LENGTH_LONG).show();
+                }
+            }
+
+        };
+        client.get( ip +"/mesevenements/add",params ,RH);
     }
 
 

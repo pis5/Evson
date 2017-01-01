@@ -62,7 +62,7 @@ public class LookForFriendActivity extends AppCompatActivity
         setContentView(R.layout.activity_look_for_friend);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        setTitle("Create New Event");
+        setTitle("Find friend");
 
         pers = (Personne)getIntent().getSerializableExtra("personne");
 

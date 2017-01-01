@@ -22,18 +22,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.app.ProgressDialog;
+
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -80,7 +71,7 @@ public class MyProfileActivity extends AppCompatActivity
         setContentView(R.layout.activity_my_profile);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        setTitle("Create New Event");
+        setTitle("Profile");
 
 
         pers = (Personne)getIntent().getSerializableExtra("personne");
@@ -212,22 +203,27 @@ public class MyProfileActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-
+            final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
             Intent it = new Intent(MyProfileActivity.this, HomeActivity.class);
             it.putExtra("personne",pers);
             startActivity(it);
 
         }
         else if (id == R.id.nav_friends){
-
+            final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
             Intent it = new Intent(MyProfileActivity.this, FriendsActivity.class);
             it.putExtra("personne",pers);
             startActivity(it);
         }
-        else
-        if (id == R.id.nav_profile) {
-
+        else if (id == R.id.nav_profile) {
+            final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
             Intent it = new Intent(MyProfileActivity.this, MyProfileActivity.class);
+            it.putExtra("personne",pers);
+            startActivity(it);
+        }
+        else if (id == R.id.nav_myEvents) {
+            final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
+            Intent it = new Intent(MyProfileActivity.this, MyEventsActivity.class);
             it.putExtra("personne",pers);
             startActivity(it);
         }
