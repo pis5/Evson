@@ -122,13 +122,13 @@ public class AmisAdapter extends RecyclerView.Adapter<AmisAdapter.MyViewHolder> 
             if(a.getDateDeNaissance()!=null){né=sdf.format(a.getDateDeNaissance());}
             if(a.getTelephone()!=null){tel=a.getTelephone();}
             description.setText("De : " +lieunaissance+".\n"+ "Habite à : "+habite+".\n"+
-            "Né le : "+né +".\n"+ "Numéro de telephone : "+tel+".");
+                    "Né le : "+né +".\n"+ "Numéro de telephone : "+tel+".");
             Log.i("voilà", description.getText().toString());
 
-                if (a.getPhoto() != null) {
-                    Bitmap bMap = BitmapFactory.decodeByteArray(a.getPhoto(),0, a.getPhoto().length);
-                    image.setImageBitmap(bMap);
-                }
+            if (a.getPhoto() != null) {
+                Bitmap bMap = BitmapFactory.decodeByteArray(a.getPhoto(),0, a.getPhoto().length);
+                image.setImageBitmap(bMap);
+            }
 
             supprimer.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -188,17 +188,17 @@ public class AmisAdapter extends RecyclerView.Adapter<AmisAdapter.MyViewHolder> 
                 // When Http response code is '404'
                 if(statusCode == 404){
 
-                     Toast.makeText(context, "Requested resource not found", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Requested resource not found", Toast.LENGTH_LONG).show();
                 }
                 // When Http response code is '500'
                 else if(statusCode == 500){
 
-                     Toast.makeText(context, "Something went wrong at server end 2 ", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Something went wrong at server end 2 ", Toast.LENGTH_LONG).show();
                 }
                 // When Http response code other than 404, 500
                 else{
 
-                     Toast.makeText(context, "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]", Toast.LENGTH_LONG).show();
                 }
             }
 

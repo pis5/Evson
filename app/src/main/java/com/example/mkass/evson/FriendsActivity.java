@@ -161,6 +161,10 @@ public class FriendsActivity extends AppCompatActivity
         }
         else if (id == R.id.nav_profile) {
             // Handle the camera action
+            final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
+            Intent it = new Intent(FriendsActivity.this, MyProfileActivity.class);
+            it.putExtra("personne",pers);
+            startActivity(it);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

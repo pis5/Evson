@@ -219,7 +219,10 @@ if(nom!=null && prenom!=null){
             startActivity(it);
         }
         else if (id == R.id.nav_profile) {
-
+            final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
+            Intent it = new Intent(AddFriendsActivity.this, MyProfileActivity.class);
+            it.putExtra("personne",pers);
+            startActivity(it);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

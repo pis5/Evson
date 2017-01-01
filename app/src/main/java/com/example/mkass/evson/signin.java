@@ -147,6 +147,7 @@ public class signin extends AppCompatActivity {
                         Intent it = new Intent(signin.this, HomeActivity.class);
                         //it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                         it.putExtra("personne",P);
+                        P.setPhoto(null);
                         startActivity(it);
                         finish();
                     }
