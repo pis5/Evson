@@ -1,34 +1,29 @@
 package com.example.mkass.evson;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import org.w3c.dom.Text;
 
 import entities.Personne;
 
-public class HomeActivity extends AppCompatActivity
+public class MyEventsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private boolean loading = true;
@@ -38,24 +33,12 @@ public class HomeActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
-
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_my_events);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Home");
+        getSupportActionBar().setTitle("My Events");
 
-
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent it = new Intent(HomeActivity.this, NewEventActivity.class);
-                it.putExtra("personne",pers);
-                startActivity(it);
-            }
-        });
+        final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -64,7 +47,6 @@ public class HomeActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-
         navigationView.setNavigationItemSelectedListener(this);
 
         ImageView navImageProfile = (ImageView)navigationView.getHeaderView(0).findViewById(R.id.navImageProfile);
@@ -79,13 +61,12 @@ public class HomeActivity extends AppCompatActivity
             navImageProfile.setImageBitmap(bMap);
         }
 
-
         final RecyclerView rv  = (RecyclerView)findViewById(R.id.list);
         mLayoutManager = new LinearLayoutManager(this);
         rv.setLayoutManager(mLayoutManager);
 
         final EvenementAdapter adapter = new EvenementAdapter();
-        adapter.invokeWS(pers, 10,false,this);
+        adapter.invokeMesEvenements(pers, 10,false,this);
         rv.setAdapter(adapter);
 
         final int[] previousTotal = {0};
@@ -113,11 +94,10 @@ public class HomeActivity extends AppCompatActivity
 
 
 
-                        adapter.invokeWS(pers,  3,true,getBaseContext());
+                        adapter.invokeMesEvenements(pers,  3,true,getBaseContext());
                         loading = true;
                     }
-
-                    }
+                }
 
             }
         });
@@ -144,7 +124,7 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.home, menu);
+        getMenuInflater().inflate(R.menu.my_events, menu);
         return true;
     }
 
@@ -168,28 +148,29 @@ public class HomeActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+
         if (id == R.id.nav_home) {
             final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
-            Intent it = new Intent(HomeActivity.this, HomeActivity.class);
+            Intent it = new Intent(MyEventsActivity.this, HomeActivity.class);
             it.putExtra("personne",pers);
             startActivity(it);
 
         }
         else if (id == R.id.nav_friends){
             final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
-            Intent it = new Intent(HomeActivity.this, FriendsActivity.class);
+            Intent it = new Intent(MyEventsActivity.this, FriendsActivity.class);
             it.putExtra("personne",pers);
             startActivity(it);
         }
         else if (id == R.id.nav_profile) {
             final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
-            Intent it = new Intent(HomeActivity.this, MyProfileActivity.class);
+            Intent it = new Intent(MyEventsActivity.this, MyProfileActivity.class);
             it.putExtra("personne",pers);
             startActivity(it);
         }
         else if (id == R.id.nav_myEvents) {
             final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
-            Intent it = new Intent(HomeActivity.this, MyEventsActivity.class);
+            Intent it = new Intent(MyEventsActivity.this, MyEventsActivity.class);
             it.putExtra("personne",pers);
             startActivity(it);
         }

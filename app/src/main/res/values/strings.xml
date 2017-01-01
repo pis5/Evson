@@ -15,7 +15,7 @@
     </string>
 
 
-    <string name="ipAdress">http://192.168.0.102:8080/ServiceWebAndroid-war</string>
+    <string name="ipAdress">http://192.168.43.88:8080/ServiceWebAndroid-war</string>
     <string name="title_activity_home">HomeActivity</string>
     <string name="title_activity_friends">FriendsActivity</string>
     <string name="title_activity_look_for_friend">LookForFriendActivity</string>
@@ -34,4 +34,5 @@
         <item>Party</item>
         <item>Challenge</item>
     </string-array>
+    <string name="title_activity_my_events">MyEventsActivity</string>
 </resources>
