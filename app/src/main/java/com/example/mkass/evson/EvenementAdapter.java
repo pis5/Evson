@@ -1,6 +1,7 @@
 package com.example.mkass.evson;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
@@ -31,6 +32,7 @@ import entities.Personne;
 public class EvenementAdapter extends RecyclerView.Adapter<EvenementAdapter.MyViewHolder> {
 
     private List<Evenement> evenements = new ArrayList<Evenement>();
+    private Personne pers;
 
     public List<Evenement> getEvenements() {
         return evenements;
@@ -45,6 +47,9 @@ public class EvenementAdapter extends RecyclerView.Adapter<EvenementAdapter.MyVi
         return evenements.size();
     }
 
+    public EvenementAdapter(Personne personne){
+        pers = personne;
+    }
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
@@ -88,7 +93,9 @@ public class EvenementAdapter extends RecyclerView.Adapter<EvenementAdapter.MyVi
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    Intent it = new Intent(view.getContext(), EventActivity.class);
+                    it.putExtra("personne",pers);
+                    view.getContext().startActivity(it);
                 }
             });
         }

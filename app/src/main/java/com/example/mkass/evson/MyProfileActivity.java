@@ -83,7 +83,6 @@ public class MyProfileActivity extends AppCompatActivity
             navImageProfile.setImageBitmap(bMap);
         }
 
-
         Nom = (MyEditText)findViewById(R.id.NomProfile);
         Nom.setText( pers.getNom());
 

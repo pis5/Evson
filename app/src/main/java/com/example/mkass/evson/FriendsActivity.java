@@ -1,6 +1,8 @@
 package com.example.mkass.evson;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -17,7 +19,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import entities.Personne;
 
@@ -36,11 +40,6 @@ public class FriendsActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("My Friends");
 
-
-
-
-
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -50,8 +49,20 @@ public class FriendsActivity extends AppCompatActivity
             NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
         final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
+
+        // Profil utilisateur dans le NavHeader
+        ImageView navImageProfile = (ImageView)navigationView.getHeaderView(0).findViewById(R.id.navImageProfile);
+        TextView navNameProfile = (TextView) navigationView.getHeaderView(0).findViewById(R.id.navNameProfile);
+        TextView navEmailProfile = (TextView)navigationView.getHeaderView(0).findViewById(R.id.navEmailProfile);
+
+
+        navNameProfile.setText(pers.getPrenom() + " "+ pers.getNom());
+        navEmailProfile.setText(pers.getEmail());
+        if( pers.getPhoto() != null){
+            Bitmap bMap = BitmapFactory.decodeByteArray(pers.getPhoto(),0,pers.getPhoto().length);
+            navImageProfile.setImageBitmap(bMap);
+        }
 
         //boutons menu amis
         final ImageButton MesAmis = (ImageButton)findViewById(R.id.imageButtonMesAmis);
