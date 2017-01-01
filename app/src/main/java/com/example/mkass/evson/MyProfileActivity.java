@@ -299,6 +299,8 @@ public class MyProfileActivity extends AppCompatActivity
                 .create();
 
 
+
+
         params.put("personne", gson.toJson(e));
 
 
