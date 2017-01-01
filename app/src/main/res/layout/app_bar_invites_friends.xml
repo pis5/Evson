@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.example.mkass.evson.FriendsActivity">
+    tools:context="com.example.mkass.evson.InvitesFriendsActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -24,7 +24,7 @@
     </android.support.design.widget.AppBarLayout>
 
 
-    <include layout="@layout/content_amis" />
+    <include layout="@layout/content_invites_friends" />
 
 
 

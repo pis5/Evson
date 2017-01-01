@@ -28,14 +28,14 @@ import java.util.List;
 import customfonts.MyTextView;
 import entities.Personne;
 
-public class FriendsToAddAdapter extends RecyclerView.Adapter<FriendsToAddAdapter.MyViewHolder> {
+public class InvitesAmisAdapter extends RecyclerView.Adapter<InvitesAmisAdapter.MyViewHolder> {
 
     private Personne me;
     private Context context;
 
     private List<Personne> amis = new ArrayList<Personne>();
 
-    public FriendsToAddAdapter(Personne pers, Context context) {
+    public InvitesAmisAdapter(Personne pers, Context context) {
         me= pers;
         this.context=context;
     }
@@ -56,7 +56,7 @@ public class FriendsToAddAdapter extends RecyclerView.Adapter<FriendsToAddAdapte
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(R.layout.list_friends_to_add, parent, false);
+        View view = inflater.inflate(R.layout.list_invites_friends, parent, false);
         return new MyViewHolder(view);
     }
 
@@ -73,8 +73,8 @@ public class FriendsToAddAdapter extends RecyclerView.Adapter<FriendsToAddAdapte
         MyTextView NomComplet;
         MyTextView description;
         ImageView image;
-        Button ajouter;
-
+        Button accepter;
+        Button refuser;
 
 
 
@@ -84,11 +84,11 @@ public class FriendsToAddAdapter extends RecyclerView.Adapter<FriendsToAddAdapte
         public MyViewHolder(final View itemView) {
             super(itemView);
 
-            NomComplet = (MyTextView)itemView.findViewById(R.id.nomCompletPersonneToAdd);
-            description = (MyTextView)itemView.findViewById(R.id.infosPersonneToAdd);
-            image = (ImageView)itemView.findViewById(R.id.imagePersonneToAdd);
-            ajouter= (Button) itemView.findViewById(R.id.button_ajouter_a_liste_amis);
-
+            NomComplet = (MyTextView)itemView.findViewById(R.id.nomCompletPersonne_invites);
+            description = (MyTextView)itemView.findViewById(R.id.infosPersonne_invites);
+            image = (ImageView)itemView.findViewById(R.id.imagePersonne_invites);
+            accepter= (Button) itemView.findViewById(R.id.button_accepter_invites);
+            refuser= (Button) itemView.findViewById(R.id.button_refuser_invites);
 
 
 
@@ -128,12 +128,21 @@ public class FriendsToAddAdapter extends RecyclerView.Adapter<FriendsToAddAdapte
                     image.setImageBitmap(bMap);
                 }
 
-            ajouter.setOnClickListener(new View.OnClickListener() {
+            accepter.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Log.i("hi","how you doing");
                     // appel WS suppression;
-                    invokeAdd(me,a);
+                    invokeDecision(me,a, true);
+                }
+            });
+
+            refuser.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.i("hi","how you doing");
+                    // appel WS suppression;
+                    invokeDecision(me,a, false);
                 }
             });
 
@@ -144,13 +153,14 @@ public class FriendsToAddAdapter extends RecyclerView.Adapter<FriendsToAddAdapte
     }
 
 
-    public void invokeAdd(Personne pers, final Personne AAjouter){
+    public void invokeDecision(Personne pers, final Personne ASupprimer, boolean accepter ){
 
         //Request parameters
         final RequestParams params = new RequestParams();
         Gson gson = new Gson();
         params.put("personne", gson.toJson(pers));
-        params.put("personneaajouter", gson.toJson(AAjouter));
+        params.put("personneasupprimer", gson.toJson(ASupprimer));
+        params.put("decision", gson.toJson(accepter));
 
         // Show Progress Dialog
         // Make RESTful webservice call using AsyncHttpClient object
@@ -164,10 +174,10 @@ public class FriendsToAddAdapter extends RecyclerView.Adapter<FriendsToAddAdapte
                 Gson gson = new Gson();
                 // When the JSON response has status boolean value assigned with true
 
-                if(response.equals("added")){
+                if(response.equals("ok")){
                     //
 
-                    boolean b=amis.remove(AAjouter);
+                    boolean b=amis.remove(ASupprimer);
                     Log.i("l", Boolean.toString(b));
                     notifyDataSetChanged();
                 }
@@ -201,28 +211,22 @@ public class FriendsToAddAdapter extends RecyclerView.Adapter<FriendsToAddAdapte
             }
 
         };
-        client.get( ip +"/amis/add",params ,RH);
+        client.get( ip +"/amis/decision",params ,RH);
 
     }
 
 
 
-    public void invokeWS( Personne p ,final int nbre,String nom, String prenom ,final boolean premierappel,final Context context){
+    public void invokeWS(final Personne pers, final Context context){
 
         //Request parameters
         final RequestParams params = new RequestParams();
-        Gson gson = new Gson();
-        if(amis.size()>0){
-            params.put("offset", gson.toJson(amis.get(amis.size()-1).getId()));
-        Log.i("id -----: ","----------- :" +amis.get(amis.size()-1).getId());
-        }
-        else{   params.put("offset",0);}
-        params.put("nom", gson.toJson(nom));
-        params.put("prenom", gson.toJson(prenom));
-        params.put("nbre", gson.toJson(nbre));
-        params.put("personne", gson.toJson(p));
-        params.put("premierappel", gson.toJson(premierappel));
-
+        Gson gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .setDateFormat("MMM d, yyyy HH:mm:ss")
+                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                .create();
+        params.put("personne", gson.toJson(pers));
 
         // Show Progress Dialog
         // Make RESTful webservice call using AsyncHttpClient object
@@ -233,20 +237,12 @@ public class FriendsToAddAdapter extends RecyclerView.Adapter<FriendsToAddAdapte
             @Override
             public void onSuccess(String response) {
                 // JSON Object
-                Gson gson = new GsonBuilder()
-                        .setPrettyPrinting()
-                        .setDateFormat("MMM d, yyyy HH:mm:ss")
-                        .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                        .create();
+                Gson gson = new Gson();
                 // When the JSON response has status boolean value assigned with true
                 if(!response.equals("")&& !response.equals(null) && !response.equals("[]")){
                     //
                     Type type = new TypeToken<List<Personne>>(){}.getType();
-
-                     if(premierappel){amis=gson.fromJson(response, type);}
-                    else{
-                         List <Personne> listA=gson.fromJson(response, type);
-                         amis.addAll(listA);}
+                    amis= gson.fromJson(response, type);
 
                     notifyDataSetChanged();
                 }
@@ -275,7 +271,7 @@ public class FriendsToAddAdapter extends RecyclerView.Adapter<FriendsToAddAdapte
             }
 
         };
-        client.get( ip +"/amis/affichertoadd",params ,RH);
+        client.get( ip +"/amis/afficherdemandes",params ,RH);
 
     }
 

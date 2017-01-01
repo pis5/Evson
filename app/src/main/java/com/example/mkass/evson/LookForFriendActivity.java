@@ -121,17 +121,11 @@ public class LookForFriendActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_home) {
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_friends) {
 
         } else if (id == R.id.nav_profile) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
 
         }
 
@@ -157,7 +151,7 @@ public class LookForFriendActivity extends AppCompatActivity
 
     public void lookUp(View view){
         if(verifyForm() == false){
-            errorView.setText("Please one of the fields");
+            errorView.setText("Please fill one of the fields");
             errorView.setVisibility(View.VISIBLE);
         }
         else{
