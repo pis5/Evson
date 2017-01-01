@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import entities.Personne;
 
@@ -31,22 +32,15 @@ public class InvitesFriendsActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_friends);
+        setContentView(R.layout.activity_invites_friends);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("My Friends");
+        getSupportActionBar().setTitle("Friend requests");
 
 
 
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -96,11 +90,12 @@ public class InvitesFriendsActivity extends AppCompatActivity
         });
 
         Log.i("Attention!!!!!", "tests test remplis");
-        final RecyclerView rv  = (RecyclerView)findViewById(R.id.listAmis);
+        final RecyclerView rv  = (RecyclerView)findViewById(R.id.listAmisInvites);
+        Log.i("contenu rv", rv.toString());
         mLayoutManager = new LinearLayoutManager(this);
         rv.setLayoutManager(mLayoutManager);
 
-        final AmisAdapter adapter = new AmisAdapter(pers,this);
+        final InvitesAmisAdapter adapter = new InvitesAmisAdapter(pers,this);
         adapter.invokeWS(pers, this);
         rv.setAdapter(adapter);
 
@@ -166,17 +161,7 @@ public class InvitesFriendsActivity extends AppCompatActivity
             it.putExtra("personne",pers);
             startActivity(it);
         }
-        else if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_profile) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+         else if (id == R.id.nav_profile) {
 
         }
 

@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import entities.Personne;
 
@@ -23,7 +24,7 @@ public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private boolean loading = true;
-    int pastVisiblesItems, visibleItemCount, totalItemCount;
+    int pastVisiblesItems, visibleItemCount, totalItemCount,firstVisibleItem;
     LinearLayoutManager mLayoutManager;
 
     @Override
@@ -66,7 +67,8 @@ public class HomeActivity extends AppCompatActivity
         adapter.invokeWS(pers, 10,false,this);
         rv.setAdapter(adapter);
 
-
+        final int[] previousTotal = {0};
+        final int visibleThreshold = 5;
 
         rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -74,38 +76,28 @@ public class HomeActivity extends AppCompatActivity
 
                 if(dy > 0) //check for scroll down
                 {
-                    visibleItemCount = mLayoutManager.getChildCount();
+                    visibleItemCount = rv.getChildCount();
                     totalItemCount = mLayoutManager.getItemCount();
-                    pastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
+                    firstVisibleItem = mLayoutManager.findFirstVisibleItemPosition();
 
-                    if (loading)
-                    {
-                        if ( (visibleItemCount + pastVisiblesItems) >= totalItemCount)
-                        {
+                    if (loading) {
+                        if (totalItemCount > previousTotal[0]) {
                             loading = false;
-                            Log.i("Test scroll down...", "Last Item Wow !");
-                            //fetch new data
-                            //adapter.invokeWS(pers, adapter.getEvenements().get(0).getId(), 3,true,getBaseContext());
+                            previousTotal[0] = totalItemCount;
                         }
                     }
-                }
-                else
-                {
-                    visibleItemCount = mLayoutManager.getChildCount();
-                    totalItemCount = mLayoutManager.getItemCount();
-                    pastVisiblesItems = mLayoutManager.findLastVisibleItemPosition();
-                    if (loading)
-                    {
-                        if ( (visibleItemCount + pastVisiblesItems) >= totalItemCount)
-                        {
-                            loading = false;
-                            Log.i("Test scroll up...", "Last Item Wow !");
-                            //fetch new data
-                            adapter.invokeWS(pers,  3,true,getBaseContext());
+                    if (!loading && (totalItemCount - visibleItemCount)
+                            <= (firstVisibleItem + visibleThreshold)) {
+                        // End has been reached
 
-                        }
+
+
+                        adapter.invokeWS(pers,  3,true,getBaseContext());
+                        loading = true;
                     }
-                }
+
+                    }
+
             }
         });
 
@@ -169,18 +161,11 @@ public class HomeActivity extends AppCompatActivity
             startActivity(it);
         }
         else
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_profile) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        if (id == R.id.nav_profile) {
+            final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
+            Intent it = new Intent(HomeActivity.this, MyProfileActivity.class);
+            it.putExtra("personne",pers);
+            startActivity(it);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

@@ -25,7 +25,7 @@ public class AddFriendsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private boolean loading = true;
-    int pastVisiblesItems, visibleItemCount, totalItemCount;
+    int pastVisiblesItems, visibleItemCount, totalItemCount, firstVisibleItem;
     LinearLayoutManager mLayoutManager;
     String nom="";
     String prenom="";
@@ -113,13 +113,13 @@ public class AddFriendsActivity extends AppCompatActivity
 
 if(nom!=null && prenom!=null){
         if(!nom.equals("") || !prenom.equals("")){
-            adapter.invokeWS(pers,5,  nom, prenom ,true,getBaseContext());
+            adapter.invokeWS(pers,2,  nom, prenom ,true,getBaseContext());
 
             rv.setAdapter(adapter);
         }}
 
-
-
+        final int[] previousTotal = {0};
+        final int visibleThreshold = 5;
 
         rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -128,39 +128,31 @@ if(nom!=null && prenom!=null){
 
                 if(dy > 0) //check for scroll down
                 {
-                    visibleItemCount = mLayoutManager.getChildCount();
+                    visibleItemCount = rv.getChildCount();
                     totalItemCount = mLayoutManager.getItemCount();
-                    pastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
+                    firstVisibleItem = mLayoutManager.findFirstVisibleItemPosition();
 
-                    if (loading)
-                    {
-                        if ( (visibleItemCount + pastVisiblesItems) >= totalItemCount)
-                        {
+                    if (loading) {
+                        if (totalItemCount > previousTotal[0]) {
                             loading = false;
-                            Log.i("Test scroll down...", "Last Item Wow !");
-                            //fetch new data
-                            adapter.invokeWS(pers,3,  nom, prenom ,false,getBaseContext());
-                            //adapter.invokeWS(pers, adapter.getEvenements().get(0).getId(), 3,true,getBaseContext());
+                            previousTotal[0] = totalItemCount;
                         }
                     }
+                    if (!loading && (totalItemCount - visibleItemCount)
+                            <= (firstVisibleItem + visibleThreshold)) {
+                        // End has been reached
+
+
+
+                        adapter.invokeWS(pers,3,  nom, prenom ,false,getBaseContext());
+                        loading = true;
+                    }
+
+
                 }
-                else
-                {
-                    visibleItemCount = mLayoutManager.getChildCount();
-                    totalItemCount = mLayoutManager.getItemCount();
-                    pastVisiblesItems = mLayoutManager.findLastVisibleItemPosition();
-                    if (loading)
-                    {
-                        if ( (visibleItemCount + pastVisiblesItems) >= totalItemCount)
-                        {
-                            loading = false;
-                            Log.i("Test scroll up...", "Last Item Wow !");
-                            //fetch new data
 
 
-                        }
-                    }
-                }}
+                }
             }
         });
 
@@ -226,17 +218,7 @@ if(nom!=null && prenom!=null){
             it.putExtra("personne",pers);
             startActivity(it);
         }
-        else if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_profile) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        else if (id == R.id.nav_profile) {
 
         }
 
