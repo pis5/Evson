@@ -5,47 +5,40 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import entities.Personne;
 
-public class AddFriendsActivity extends AppCompatActivity
+public class MyEventsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private boolean loading = true;
-    int pastVisiblesItems, visibleItemCount, totalItemCount, firstVisibleItem;
+    int pastVisiblesItems, visibleItemCount, totalItemCount,firstVisibleItem;
     LinearLayoutManager mLayoutManager;
-    String nom="";
-    String prenom="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_friends_to_add);
+        setContentView(R.layout.activity_my_events);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Add Friends");
+        getSupportActionBar().setTitle("My Events");
 
-
-
-
-
+        final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -53,11 +46,9 @@ public class AddFriendsActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
-        /* profile Nav Header  */
         ImageView navImageProfile = (ImageView)navigationView.getHeaderView(0).findViewById(R.id.navImageProfile);
         TextView navNameProfile = (TextView) navigationView.getHeaderView(0).findViewById(R.id.navNameProfile);
         TextView navEmailProfile = (TextView)navigationView.getHeaderView(0).findViewById(R.id.navEmailProfile);
@@ -70,68 +61,13 @@ public class AddFriendsActivity extends AppCompatActivity
             navImageProfile.setImageBitmap(bMap);
         }
 
-        nom=(String) getIntent().getSerializableExtra("nom");
-        prenom=(String) getIntent().getSerializableExtra("prenom");
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent it = new Intent(AddFriendsActivity.this,LookForFriendActivity.class);
-                it.putExtra("personne",pers);
-                startActivity(it);
-            }
-        });
-
-        //boutons menu amis
-        final ImageButton MesAmis = (ImageButton)findViewById(R.id.imageButtonMesAmis);
-        MesAmis.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent it = new Intent(AddFriendsActivity.this, FriendsActivity.class);
-                it.putExtra("personne",pers);
-                startActivity(it);
-
-            }
-        });
-
-        final ImageButton AjouterAmi = (ImageButton)findViewById(R.id.imageButtonAjouterAmis);
-        AjouterAmi.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent it = new Intent(AddFriendsActivity.this, AddFriendsActivity.class);
-                it.putExtra("personne",pers);
-                startActivity(it);
-
-            }
-        });
-
-
-        final ImageButton Demandes = (ImageButton)findViewById(R.id.imageButtonDemandesAmis);
-        Demandes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent it = new Intent(AddFriendsActivity.this, InvitesFriendsActivity.class);
-                it.putExtra("personne",pers);
-                startActivity(it);
-
-            }
-        });
-
-        Log.i("Attention!!!!!", "tests test remplis");
-        final RecyclerView rv  = (RecyclerView)findViewById(R.id.listAmisToAdd);
+        final RecyclerView rv  = (RecyclerView)findViewById(R.id.list);
         mLayoutManager = new LinearLayoutManager(this);
         rv.setLayoutManager(mLayoutManager);
 
-        final FriendsToAddAdapter adapter = new FriendsToAddAdapter(pers,this);
-       // adapter.invokeWS(pers, this);
-
-
-if(nom!=null && prenom!=null){
-        if(!nom.equals("") || !prenom.equals("")){
-            adapter.invokeWS(pers,2,  nom, prenom ,true,getBaseContext());
-
-            rv.setAdapter(adapter);
-        }}
+        final EvenementAdapter adapter = new EvenementAdapter();
+        adapter.invokeMesEvenements(pers, 10,false,this);
+        rv.setAdapter(adapter);
 
         final int[] previousTotal = {0};
         final int visibleThreshold = 5;
@@ -139,7 +75,6 @@ if(nom!=null && prenom!=null){
         rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if(!nom.equals("") || !prenom.equals("")){
 
                 if(dy > 0) //check for scroll down
                 {
@@ -159,23 +94,15 @@ if(nom!=null && prenom!=null){
 
 
 
-                        adapter.invokeWS(pers,3,  nom, prenom ,false,getBaseContext());
+                        adapter.invokeMesEvenements(pers,  3,true,getBaseContext());
                         loading = true;
                     }
-
-
                 }
 
-
-                }
             }
         });
 
-
-
-
-
-        final ProgressBar progress = (ProgressBar) findViewById(R.id.progressAmis);
+        final ProgressBar progress = (ProgressBar) findViewById(R.id.progress);
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
@@ -197,7 +124,7 @@ if(nom!=null && prenom!=null){
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.home, menu);
+        getMenuInflater().inflate(R.menu.my_events, menu);
         return true;
     }
 
@@ -221,21 +148,29 @@ if(nom!=null && prenom!=null){
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+
         if (id == R.id.nav_home) {
             final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
-           Intent it = new Intent(AddFriendsActivity.this, HomeActivity.class);
+            Intent it = new Intent(MyEventsActivity.this, HomeActivity.class);
             it.putExtra("personne",pers);
             startActivity(it);
+
         }
         else if (id == R.id.nav_friends){
             final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
-            Intent it = new Intent(AddFriendsActivity.this, FriendsActivity.class);
+            Intent it = new Intent(MyEventsActivity.this, FriendsActivity.class);
             it.putExtra("personne",pers);
             startActivity(it);
         }
         else if (id == R.id.nav_profile) {
             final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
-            Intent it = new Intent(AddFriendsActivity.this, MyProfileActivity.class);
+            Intent it = new Intent(MyEventsActivity.this, MyProfileActivity.class);
+            it.putExtra("personne",pers);
+            startActivity(it);
+        }
+        else if (id == R.id.nav_myEvents) {
+            final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
+            Intent it = new Intent(MyEventsActivity.this, MyEventsActivity.class);
             it.putExtra("personne",pers);
             startActivity(it);
         }
@@ -244,11 +179,4 @@ if(nom!=null && prenom!=null){
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-
-
-
-
-
-
 }

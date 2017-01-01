@@ -1,6 +1,7 @@
 package com.example.mkass.evson;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
@@ -31,6 +32,7 @@ import entities.Personne;
 public class EvenementAdapter extends RecyclerView.Adapter<EvenementAdapter.MyViewHolder> {
 
     private List<Evenement> evenements = new ArrayList<Evenement>();
+    private Personne pers;
 
     public List<Evenement> getEvenements() {
         return evenements;
@@ -45,6 +47,9 @@ public class EvenementAdapter extends RecyclerView.Adapter<EvenementAdapter.MyVi
         return evenements.size();
     }
 
+    public EvenementAdapter(Personne personne){
+        pers = personne;
+    }
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
@@ -88,7 +93,9 @@ public class EvenementAdapter extends RecyclerView.Adapter<EvenementAdapter.MyVi
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    Intent it = new Intent(view.getContext(), EventActivity.class);
+                    it.putExtra("personne",pers);
+                    view.getContext().startActivity(it);
                 }
             });
         }
@@ -169,7 +176,7 @@ public class EvenementAdapter extends RecyclerView.Adapter<EvenementAdapter.MyVi
                 }
                 // When Http response code is '500'
                 else if(statusCode == 500){
-                     Toast.makeText(context, "Something went wrong at server end 2 ", Toast.LENGTH_LONG).show();
+                     Toast.makeText(context, "Something went wrong at server end !! ", Toast.LENGTH_LONG).show();
                 }
                 // When Http response code other than 404, 500
                 else{
@@ -180,6 +187,71 @@ public class EvenementAdapter extends RecyclerView.Adapter<EvenementAdapter.MyVi
         };
         client.get( ip +"/evenementsamis/afficher",params ,RH);
 
+    }
+
+    public void invokeMesEvenements(final Personne pers,  final int nbre, final boolean plusAncien, final Context context){
+
+        //Request parameters
+        final RequestParams params = new RequestParams();
+        Gson gson = new Gson();
+        params.put("personne", gson.toJson(pers));
+        if(evenements.size()>0){
+            params.put("offset", gson.toJson(evenements.get(evenements.size()-1).getId()));}
+        else{   params.put("offset",gson.toJson(0));}
+
+        params.put("nbre", gson.toJson(nbre));
+        params.put("plusAncien", gson.toJson(plusAncien));
+        // Show Progress Dialog
+        // Make RESTful webservice call using AsyncHttpClient object
+        final AsyncHttpClient client = new AsyncHttpClient();
+        final String ip = context.getString(R.string.ipAdress);
+        AsyncHttpResponseHandler RH=new AsyncHttpResponseHandler() {
+            // When the response returned by REST has Http response code '200'
+            @Override
+            public void onSuccess(String response) {
+                // JSON Object
+                Gson gson = new GsonBuilder()
+                        .setPrettyPrinting()
+                        .setDateFormat("MMM d, yyyy HH:mm:ss")
+                        .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                        .create();
+                // When the JSON response has status boolean value assigned with true
+                if(!response.equals("")&& !response.equals(null) && !response.equals("[]")){
+                    //
+                    Type type = new TypeToken<List<Evenement>>(){}.getType();
+                    List<Evenement> L = gson.fromJson(response, type);
+                    if(plusAncien == true)
+                        evenements.addAll(evenements.size(),L);
+                    else
+                        evenements.addAll(0, L);
+                    Log.i("Liste actuelle", evenements.toString());
+                    notifyDataSetChanged();
+                }
+                // Else display error message
+                else{
+                    Toast.makeText(context, "All events charged", Toast.LENGTH_LONG).show();
+                }
+            }
+            // When the response returned by REST has Http response code other than '200'
+            @Override
+            public void onFailure(int statusCode, Throwable error,
+                                  String content) {
+                // Hide Progress Dialog
+                // When Http response code is '404'
+                if(statusCode == 404){
+                    Toast.makeText(context, "Requested resource not found", Toast.LENGTH_LONG).show();
+                }
+                // When Http response code is '500'
+                else if(statusCode == 500){
+                    Toast.makeText(context, "Something went wrong at server end !! ", Toast.LENGTH_LONG).show();
+                }
+                // When Http response code other than 404, 500
+                else{
+                    Toast.makeText(context, "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]", Toast.LENGTH_LONG).show();
+                }
+            }
+        };
+        client.get( ip +"/mesevenements/afficher",params ,RH);
     }
 
 }

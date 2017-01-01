@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -138,6 +139,7 @@ public class signin extends AppCompatActivity {
 
                         // Navigate to Home screen
                         ObjectMapper mapper = new ObjectMapper();
+                        Log.i("test tets", response);
                         P = mapper.readValue(response, Personne.class);
 
 
@@ -145,7 +147,7 @@ public class signin extends AppCompatActivity {
 
 
                         Intent it = new Intent(signin.this, HomeActivity.class);
-                        //it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                         it.putExtra("personne",P);
                         P.setPhoto(null);
                         startActivity(it);

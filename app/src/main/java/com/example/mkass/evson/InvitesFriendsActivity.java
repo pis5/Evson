@@ -1,6 +1,8 @@
 package com.example.mkass.evson;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -17,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -53,6 +56,18 @@ public class InvitesFriendsActivity extends AppCompatActivity
 
 
         final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
+        // Profil utilisateur dans le NavHeader
+        ImageView navImageProfile = (ImageView)navigationView.getHeaderView(0).findViewById(R.id.navImageProfile);
+        TextView navNameProfile = (TextView) navigationView.getHeaderView(0).findViewById(R.id.navNameProfile);
+        TextView navEmailProfile = (TextView)navigationView.getHeaderView(0).findViewById(R.id.navEmailProfile);
+
+
+        navNameProfile.setText(pers.getPrenom() + " "+ pers.getNom());
+        navEmailProfile.setText(pers.getEmail());
+        if( pers.getPhoto() != null){
+            Bitmap bMap = BitmapFactory.decodeByteArray(pers.getPhoto(),0,pers.getPhoto().length);
+            navImageProfile.setImageBitmap(bMap);
+        }
 
         //boutons menu amis
         final ImageButton MesAmis = (ImageButton)findViewById(R.id.imageButtonMesAmis);

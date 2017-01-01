@@ -1,6 +1,9 @@
 package com.example.mkass.evson;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -12,11 +15,16 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import entities.Personne;
 
@@ -30,12 +38,14 @@ public class HomeActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
+
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("My Friends Events");
+        getSupportActionBar().setTitle("Home");
 
-        final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -53,17 +63,27 @@ public class HomeActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        // Profil utilisateur dans le NavHeader
+        ImageView navImageProfile = (ImageView)navigationView.getHeaderView(0).findViewById(R.id.navImageProfile);
+        TextView navNameProfile = (TextView) navigationView.getHeaderView(0).findViewById(R.id.navNameProfile);
+        TextView navEmailProfile = (TextView)navigationView.getHeaderView(0).findViewById(R.id.navEmailProfile);
 
 
+        navNameProfile.setText(pers.getPrenom() + " "+ pers.getNom());
+        navEmailProfile.setText(pers.getEmail());
+        if( pers.getPhoto() != null){
+            Bitmap bMap = BitmapFactory.decodeByteArray(pers.getPhoto(),0,pers.getPhoto().length);
+            navImageProfile.setImageBitmap(bMap);
+        }
 
 
         final RecyclerView rv  = (RecyclerView)findViewById(R.id.list);
         mLayoutManager = new LinearLayoutManager(this);
         rv.setLayoutManager(mLayoutManager);
 
-        final EvenementAdapter adapter = new EvenementAdapter();
+        final EvenementAdapter adapter = new EvenementAdapter(pers);
         adapter.invokeWS(pers, 10,false,this);
         rv.setAdapter(adapter);
 
@@ -160,10 +180,15 @@ public class HomeActivity extends AppCompatActivity
             it.putExtra("personne",pers);
             startActivity(it);
         }
-        else
-        if (id == R.id.nav_profile) {
+        else if (id == R.id.nav_profile) {
             final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
             Intent it = new Intent(HomeActivity.this, MyProfileActivity.class);
+            it.putExtra("personne",pers);
+            startActivity(it);
+        }
+        else if (id == R.id.nav_myEvents) {
+            final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
+            Intent it = new Intent(HomeActivity.this, MyEventsActivity.class);
             it.putExtra("personne",pers);
             startActivity(it);
         }
@@ -172,11 +197,4 @@ public class HomeActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-
-
-
-
-
-
 }
