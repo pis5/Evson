@@ -23,21 +23,19 @@ import com.loopj.android.http.RequestParams;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import customfonts.MyTextView;
-import entities.Evenement;
 import entities.Personne;
 
-public class AmisAdapter extends RecyclerView.Adapter<AmisAdapter.MyViewHolder> {
+public class FriendsToAddAdapter extends RecyclerView.Adapter<FriendsToAddAdapter.MyViewHolder> {
 
     private Personne me;
     private Context context;
 
     private List<Personne> amis = new ArrayList<Personne>();
 
-    public AmisAdapter(Personne pers, Context context) {
+    public FriendsToAddAdapter(Personne pers, Context context) {
         me= pers;
         this.context=context;
     }
@@ -58,7 +56,7 @@ public class AmisAdapter extends RecyclerView.Adapter<AmisAdapter.MyViewHolder> 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(R.layout.list_personne, parent, false);
+        View view = inflater.inflate(R.layout.list_friends_to_add, parent, false);
         return new MyViewHolder(view);
     }
 
@@ -75,7 +73,7 @@ public class AmisAdapter extends RecyclerView.Adapter<AmisAdapter.MyViewHolder> 
         MyTextView NomComplet;
         MyTextView description;
         ImageView image;
-        Button supprimer;
+        Button ajouter;
 
 
 
@@ -86,10 +84,10 @@ public class AmisAdapter extends RecyclerView.Adapter<AmisAdapter.MyViewHolder> 
         public MyViewHolder(final View itemView) {
             super(itemView);
 
-            NomComplet = (MyTextView)itemView.findViewById(R.id.nomComplet);
-            description = (MyTextView)itemView.findViewById(R.id.infosPersonne);
-            image = (ImageView)itemView.findViewById(R.id.imagePersonne);
-            supprimer= (Button) itemView.findViewById(R.id.button_supprimer_de_liste_amis);
+            NomComplet = (MyTextView)itemView.findViewById(R.id.nomCompletPersonneToAdd);
+            description = (MyTextView)itemView.findViewById(R.id.infosPersonneToAdd);
+            image = (ImageView)itemView.findViewById(R.id.imagePersonneToAdd);
+            ajouter= (Button) itemView.findViewById(R.id.button_ajouter_a_liste_amis);
 
 
 
@@ -130,12 +128,12 @@ public class AmisAdapter extends RecyclerView.Adapter<AmisAdapter.MyViewHolder> 
                     image.setImageBitmap(bMap);
                 }
 
-            supprimer.setOnClickListener(new View.OnClickListener() {
+            ajouter.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Log.i("hi","how you doing");
                     // appel WS suppression;
-                    invokeDelete(me,a);
+                    invokeAdd(me,a);
                 }
             });
 
@@ -146,13 +144,13 @@ public class AmisAdapter extends RecyclerView.Adapter<AmisAdapter.MyViewHolder> 
     }
 
 
-    public void invokeDelete(Personne pers, final Personne ASupprimer ){
+    public void invokeAdd(Personne pers, final Personne AAjouter){
 
         //Request parameters
         final RequestParams params = new RequestParams();
         Gson gson = new Gson();
         params.put("personne", gson.toJson(pers));
-        params.put("personneasupprimer", gson.toJson(ASupprimer));
+        params.put("personneaajouter", gson.toJson(AAjouter));
 
         // Show Progress Dialog
         // Make RESTful webservice call using AsyncHttpClient object
@@ -166,10 +164,10 @@ public class AmisAdapter extends RecyclerView.Adapter<AmisAdapter.MyViewHolder> 
                 Gson gson = new Gson();
                 // When the JSON response has status boolean value assigned with true
 
-                if(response.equals("deleted")){
+                if(response.equals("added")){
                     //
 
-                    boolean b=amis.remove(ASupprimer);
+                    boolean b=amis.remove(AAjouter);
                     Log.i("l", Boolean.toString(b));
                     notifyDataSetChanged();
                 }
@@ -203,22 +201,26 @@ public class AmisAdapter extends RecyclerView.Adapter<AmisAdapter.MyViewHolder> 
             }
 
         };
-        client.get( ip +"/amis/delete",params ,RH);
+        client.get( ip +"/amis/add",params ,RH);
 
     }
 
 
 
-    public void invokeWS(final Personne pers, final Context context){
+    public void invokeWS( Personne p ,final int nbre,String nom, String prenom ,final boolean premierappel,final Context context){
 
         //Request parameters
         final RequestParams params = new RequestParams();
-        Gson gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .setDateFormat("MMM d, yyyy HH:mm:ss")
-                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                .create();
-        params.put("personne", gson.toJson(pers));
+        Gson gson = new Gson();
+        if(amis.size()>0){
+            params.put("offset", gson.toJson(amis.get(amis.size()-1).getId()));}
+        else{   params.put("offset",0);}
+        params.put("nom", gson.toJson(nom));
+        params.put("prenom", gson.toJson(prenom));
+        params.put("nbre", gson.toJson(nbre));
+        params.put("personne", gson.toJson(p));
+        params.put("premierappel", gson.toJson(premierappel));
+
 
         // Show Progress Dialog
         // Make RESTful webservice call using AsyncHttpClient object
@@ -229,12 +231,20 @@ public class AmisAdapter extends RecyclerView.Adapter<AmisAdapter.MyViewHolder> 
             @Override
             public void onSuccess(String response) {
                 // JSON Object
-                Gson gson = new Gson();
+                Gson gson = new GsonBuilder()
+                        .setPrettyPrinting()
+                        .setDateFormat("MMM d, yyyy HH:mm:ss")
+                        .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                        .create();
                 // When the JSON response has status boolean value assigned with true
                 if(!response.equals("")&& !response.equals(null) && !response.equals("[]")){
                     //
                     Type type = new TypeToken<List<Personne>>(){}.getType();
-                    amis= gson.fromJson(response, type);
+
+                     if(premierappel){amis=gson.fromJson(response, type);}
+                    else{
+                         List <Personne> listA=gson.fromJson(response, type);
+                         amis.addAll(listA);}
 
                     notifyDataSetChanged();
                 }
@@ -263,7 +273,7 @@ public class AmisAdapter extends RecyclerView.Adapter<AmisAdapter.MyViewHolder> 
             }
 
         };
-        client.get( ip +"/amis/afficher",params ,RH);
+        client.get( ip +"/amis/affichertoadd",params ,RH);
 
     }
 

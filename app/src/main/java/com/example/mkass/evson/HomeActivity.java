@@ -32,7 +32,7 @@ public class HomeActivity extends AppCompatActivity
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("My Events");
+        getSupportActionBar().setTitle("My Friends Events");
 
         final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
 
@@ -63,7 +63,7 @@ public class HomeActivity extends AppCompatActivity
         rv.setLayoutManager(mLayoutManager);
 
         final EvenementAdapter adapter = new EvenementAdapter();
-        adapter.invokeWS(pers, 0, 10,false,this);
+        adapter.invokeWS(pers, 10,false,this);
         rv.setAdapter(adapter);
 
 
@@ -101,7 +101,7 @@ public class HomeActivity extends AppCompatActivity
                             loading = false;
                             Log.i("Test scroll up...", "Last Item Wow !");
                             //fetch new data
-                            adapter.invokeWS(pers, adapter.getEvenements().get(adapter.getEvenements().size()-1).getId(), 3,true,getBaseContext());
+                            adapter.invokeWS(pers,  3,true,getBaseContext());
 
                         }
                     }

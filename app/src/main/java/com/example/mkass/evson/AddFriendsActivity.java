@@ -27,26 +27,21 @@ public class AddFriendsActivity extends AppCompatActivity
     private boolean loading = true;
     int pastVisiblesItems, visibleItemCount, totalItemCount;
     LinearLayoutManager mLayoutManager;
+    String nom="";
+    String prenom="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_friends);
+        setContentView(R.layout.activity_friends_to_add);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("My Friends");
+        getSupportActionBar().setTitle("Add Friends");
 
 
 
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -59,6 +54,18 @@ public class AddFriendsActivity extends AppCompatActivity
 
 
         final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
+
+        nom=(String) getIntent().getSerializableExtra("nom");
+        prenom=(String) getIntent().getSerializableExtra("prenom");
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent it = new Intent(AddFriendsActivity.this,LookForFriendActivity.class);
+                it.putExtra("personne",pers);
+                startActivity(it);
+            }
+        });
 
         //boutons menu amis
         final ImageButton MesAmis = (ImageButton)findViewById(R.id.imageButtonMesAmis);
@@ -96,13 +103,66 @@ public class AddFriendsActivity extends AppCompatActivity
         });
 
         Log.i("Attention!!!!!", "tests test remplis");
-        final RecyclerView rv  = (RecyclerView)findViewById(R.id.listAmis);
+        final RecyclerView rv  = (RecyclerView)findViewById(R.id.listAmisToAdd);
         mLayoutManager = new LinearLayoutManager(this);
         rv.setLayoutManager(mLayoutManager);
 
-        final AmisAdapter adapter = new AmisAdapter(pers,this);
-        adapter.invokeWS(pers, this);
-        rv.setAdapter(adapter);
+        final FriendsToAddAdapter adapter = new FriendsToAddAdapter(pers,this);
+       // adapter.invokeWS(pers, this);
+
+
+if(nom!=null && prenom!=null){
+        if(!nom.equals("") || !prenom.equals("")){
+            adapter.invokeWS(pers,5,  nom, prenom ,true,getBaseContext());
+
+            rv.setAdapter(adapter);
+        }}
+
+
+
+
+        rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if(!nom.equals("") || !prenom.equals("")){
+
+                if(dy > 0) //check for scroll down
+                {
+                    visibleItemCount = mLayoutManager.getChildCount();
+                    totalItemCount = mLayoutManager.getItemCount();
+                    pastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
+
+                    if (loading)
+                    {
+                        if ( (visibleItemCount + pastVisiblesItems) >= totalItemCount)
+                        {
+                            loading = false;
+                            Log.i("Test scroll down...", "Last Item Wow !");
+                            //fetch new data
+                            adapter.invokeWS(pers,3,  nom, prenom ,false,getBaseContext());
+                            //adapter.invokeWS(pers, adapter.getEvenements().get(0).getId(), 3,true,getBaseContext());
+                        }
+                    }
+                }
+                else
+                {
+                    visibleItemCount = mLayoutManager.getChildCount();
+                    totalItemCount = mLayoutManager.getItemCount();
+                    pastVisiblesItems = mLayoutManager.findLastVisibleItemPosition();
+                    if (loading)
+                    {
+                        if ( (visibleItemCount + pastVisiblesItems) >= totalItemCount)
+                        {
+                            loading = false;
+                            Log.i("Test scroll up...", "Last Item Wow !");
+                            //fetch new data
+
+
+                        }
+                    }
+                }}
+            }
+        });
 
 
 

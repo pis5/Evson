@@ -21,7 +21,6 @@ import android.view.MenuItem;
 import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -30,13 +29,12 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -51,6 +49,8 @@ import entities.Personne;
 public class NewEventActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private int year, month, day;
+    private DatePicker datePicker;
     private static MyEditText dateEvent;
     private static TextView locationView;
     private static MyEditText title;
@@ -86,7 +86,7 @@ public class NewEventActivity extends AppCompatActivity
         locationView = (MyTextView)findViewById(R.id.location);
         title = (MyEditText)findViewById(R.id.title);
         description = (MyEditText)findViewById(R.id.description);
-        errorView = (MyTextView)findViewById(R.id.location);
+        errorView = (MyTextView)findViewById(R.id.errorMsg);
         spinner = (Spinner)findViewById(R.id.spinner);
 
         dateEvent.setOnClickListener(new View.OnClickListener() {
@@ -265,7 +265,11 @@ public class NewEventActivity extends AppCompatActivity
     private void invokeAddEvent(Evenement ev){
         //Request parameters
         final RequestParams params = new RequestParams();
-        Gson gson = new Gson();
+        Gson gson =new GsonBuilder()
+                .setPrettyPrinting()
+                .setDateFormat("MMM d, yyyy HH:mm:ss")
+                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                .create();
         params.put("evenement", gson.toJson(ev));
 
         // Show Progress Dialog
@@ -276,20 +280,28 @@ public class NewEventActivity extends AppCompatActivity
             // When the response returned by REST has Http response code '200'
             @Override
             public void onSuccess(String response) {
-                    // JSON Object
-                    // When the JSON response has status boolean value assigned with true
-                    if(response.equals("created")){
+                // JSON Object
+                Gson gson = new GsonBuilder()
+                        .setPrettyPrinting()
+                        .setDateFormat("MMM d, yyyy HH:mm:ss")
+                        .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                        .create();
+                // When the JSON response has status boolean value assigned with true
 
-                        Toast.makeText(getApplicationContext(), "Event created successfully!", Toast.LENGTH_LONG).show();
-                        finish();
-                    }
+                if(response.equals("created")){
 
-
+                    finish();
+                }
+                // Else display error message
+                else{
+                    // Toast.makeText(context, "Nothing to show here!!", Toast.LENGTH_LONG).show();
+                }
             }
             // When the response returned by REST has Http response code other than '200'
             @Override
             public void onFailure(int statusCode, Throwable error,
                                   String content) {
+                Log.i("l", "lil");
 
                 // Hide Progress Dialog
                 // When Http response code is '404'
@@ -309,6 +321,6 @@ public class NewEventActivity extends AppCompatActivity
                 }
             }
         };
-        client.get( ip +"/mesevents/createEvent",params ,RH);
+        client.get( ip +"/mesevenements/createEvent",params ,RH);
     }
 }
