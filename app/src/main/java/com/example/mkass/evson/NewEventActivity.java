@@ -145,6 +145,31 @@ public class NewEventActivity extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        if (id == R.id.nav_home) {
+            final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
+            Intent it = new Intent(NewEventActivity.this, HomeActivity.class);
+            it.putExtra("personne",pers);
+            startActivity(it);
+
+        }
+        else if (id == R.id.nav_friends){
+            final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
+            Intent it = new Intent(NewEventActivity.this, FriendsActivity.class);
+            it.putExtra("personne",pers);
+            startActivity(it);
+        }
+        else if (id == R.id.nav_profile) {
+            final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
+            Intent it = new Intent(NewEventActivity.this, MyProfileActivity.class);
+            it.putExtra("personne",pers);
+            startActivity(it);
+        }
+        else if (id == R.id.nav_myEvents) {
+            final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
+            Intent it = new Intent(NewEventActivity.this, MyEventsActivity.class);
+            it.putExtra("personne",pers);
+            startActivity(it);
+        }
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {

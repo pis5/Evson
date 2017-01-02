@@ -38,7 +38,9 @@ public class MyEventsActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("My Events");
 
+
         final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -52,6 +54,9 @@ public class MyEventsActivity extends AppCompatActivity
         ImageView navImageProfile = (ImageView)navigationView.getHeaderView(0).findViewById(R.id.navImageProfile);
         TextView navNameProfile = (TextView) navigationView.getHeaderView(0).findViewById(R.id.navNameProfile);
         TextView navEmailProfile = (TextView)navigationView.getHeaderView(0).findViewById(R.id.navEmailProfile);
+
+
+
 
 
         navNameProfile.setText(pers.getPrenom() + " "+ pers.getNom());
@@ -101,6 +106,7 @@ public class MyEventsActivity extends AppCompatActivity
 
             }
         });
+
 
         final ProgressBar progress = (ProgressBar) findViewById(R.id.progress);
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {

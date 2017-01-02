@@ -56,7 +56,7 @@
                     android:layout_weight="0.6"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="2 day ago"
+                    android:text=""
                     android:textColor="@color/listsub1"
                     android:textSize="14dp"
                     android:layout_gravity="center"
@@ -100,6 +100,8 @@
                         android:ellipsize="end"
                         />
 
+
+
                     <customfonts.MyTextView
                         android:id="@+id/description"
                         android:layout_width="match_parent"
@@ -111,18 +113,14 @@
                         android:textSize="13dp"
                         android:textColor="@color/listsub1"
                         />
-
-
-                    <customfonts.MyTextView
-                        android:id="@+id/intrest"
+                    <Button
+                        android:text="Participer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="0 comments | 0 likes"
-                        android:textSize="12dp"
-                        android:textColor="@color/listsub2"
-                        android:maxLines="1"
-                        android:layout_marginTop="13dp"
-                        />
+                        android:id="@+id/btn_participer" />
+
+
+
 
                 </LinearLayout>
 

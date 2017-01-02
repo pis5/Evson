@@ -160,9 +160,10 @@ public class FriendsActivity extends AppCompatActivity
         int id = item.getItemId();
         if (id == R.id.nav_home) {
             final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
-           Intent it = new Intent(FriendsActivity.this, HomeActivity.class);
+            Intent it = new Intent(FriendsActivity.this, HomeActivity.class);
             it.putExtra("personne",pers);
             startActivity(it);
+
         }
         else if (id == R.id.nav_friends){
             final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
@@ -171,7 +172,16 @@ public class FriendsActivity extends AppCompatActivity
             startActivity(it);
         }
         else if (id == R.id.nav_profile) {
-            // Handle the camera action
+            final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
+            Intent it = new Intent(FriendsActivity.this, MyProfileActivity.class);
+            it.putExtra("personne",pers);
+            startActivity(it);
+        }
+        else if (id == R.id.nav_myEvents) {
+            final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
+            Intent it = new Intent(FriendsActivity.this, MyEventsActivity.class);
+            it.putExtra("personne",pers);
+            startActivity(it);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

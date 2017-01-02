@@ -158,6 +158,8 @@ public class InvitesAmisAdapter extends RecyclerView.Adapter<InvitesAmisAdapter.
         //Request parameters
         final RequestParams params = new RequestParams();
         Gson gson = new Gson();
+        pers.setPhoto(null);
+        ASupprimer.setPhoto(null);
         params.put("personne", gson.toJson(pers));
         params.put("personneasupprimer", gson.toJson(ASupprimer));
         params.put("decision", gson.toJson(accepter));

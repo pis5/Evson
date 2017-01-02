@@ -6,7 +6,9 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.GravityCompat;
@@ -14,17 +16,35 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
-import android.widget.ImageView;
-import android.widget.TextView;
 
+import android.widget.Toast;
+
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Hashtable;
+import java.util.Map;
 
 import customfonts.MyEditText;
 import customfonts.MyTextView;
+import entities.Evenement;
 import entities.Personne;
 
 public class MyProfileActivity extends AppCompatActivity
@@ -37,8 +57,10 @@ public class MyProfileActivity extends AppCompatActivity
     private static MyEditText LieuNaissance;
     private static MyEditText Habitat;
     private static MyEditText Phone;
-    ImageView image;
+
+
     private static NavigationView navigationView;
+    String monimage;
     private static MyTextView errorView;
 
     Personne pers;
@@ -49,7 +71,7 @@ public class MyProfileActivity extends AppCompatActivity
         setContentView(R.layout.activity_my_profile);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        setTitle("Create New Event");
+        setTitle("Profile");
 
 
         pers = (Personne)getIntent().getSerializableExtra("personne");
@@ -71,17 +93,6 @@ public class MyProfileActivity extends AppCompatActivity
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        ImageView navImageProfile = (ImageView)navigationView.getHeaderView(0).findViewById(R.id.navImageProfile);
-        TextView navNameProfile = (TextView) navigationView.getHeaderView(0).findViewById(R.id.navNameProfile);
-        TextView navEmailProfile = (TextView)navigationView.getHeaderView(0).findViewById(R.id.navEmailProfile);
-
-
-        navNameProfile.setText(pers.getPrenom() + " "+ pers.getNom());
-        navEmailProfile.setText(pers.getEmail());
-        if( pers.getPhoto() != null){
-            Bitmap bMap = BitmapFactory.decodeByteArray(pers.getPhoto(),0,pers.getPhoto().length);
-            navImageProfile.setImageBitmap(bMap);
-        }
 
         Nom = (MyEditText)findViewById(R.id.NomProfile);
         Nom.setText( pers.getNom());
@@ -91,8 +102,13 @@ public class MyProfileActivity extends AppCompatActivity
 
         DateNaissance = (MyEditText)findViewById(R.id.dateDeNaissance);
         if (pers.getDateDeNaissance() != null) {
-        DateNaissance.setText(pers.getDateDeNaissance().toString());
-            e.setDateDeNaissance(pers.getDateDeNaissance());
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/M/yyyy");
+
+                DateNaissance.setText(formatter.format(pers.getDateDeNaissance()));
+
+
+                e.setDateDeNaissance(pers.getDateDeNaissance());
+
         }
         LieuNaissance= (MyEditText)findViewById(R.id.lieuNaissanceProfile);
         if (pers.getLieuDeNaissance() != null) {
@@ -100,19 +116,21 @@ public class MyProfileActivity extends AppCompatActivity
             e.setLieuDeNaissance(pers.getLieuDeNaissance());
         }
         Habitat = (MyEditText)findViewById(R.id.HabitatProfile);
+        if (pers.getHabite() != null) {
         Habitat.setText(pers.getHabite());
-        Phone=(MyEditText)findViewById(R.id.TelephoneProfile);
-        Phone.setText(pers.getTelephone());
-
-        if (pers.getPhoto() != null) {
-            Bitmap bMap = BitmapFactory.decodeByteArray(pers.getPhoto(),0, pers.getPhoto().length);
-            image.setImageBitmap(bMap);
+            e.setHabite(pers.getHabite());
         }
+        Phone=(MyEditText)findViewById(R.id.TelephoneProfile);
+        if (pers.getTelephone() != null) {
+        Phone.setText(pers.getTelephone());
+        e.setTelephone(pers.getTelephone());
+        }
+
 
         DateNaissance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DialogFragment newFragment = new NewEventActivity.DatePickerFragment();
+                DialogFragment newFragment = new MyProfileActivity.DatePickerFragment();
                 newFragment.show(getSupportFragmentManager(), "datePicker");
             }
         });
@@ -197,10 +215,15 @@ public class MyProfileActivity extends AppCompatActivity
             it.putExtra("personne",pers);
             startActivity(it);
         }
-        else
-        if (id == R.id.nav_profile) {
+        else if (id == R.id.nav_profile) {
             final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
             Intent it = new Intent(MyProfileActivity.this, MyProfileActivity.class);
+            it.putExtra("personne",pers);
+            startActivity(it);
+        }
+        else if (id == R.id.nav_myEvents) {
+            final Personne pers = (Personne)getIntent().getSerializableExtra("personne");
+            Intent it = new Intent(MyProfileActivity.this, MyEventsActivity.class);
             it.putExtra("personne",pers);
             startActivity(it);
         }
@@ -231,19 +254,107 @@ public class MyProfileActivity extends AppCompatActivity
             errorView.setVisibility(View.VISIBLE);
         }
         else{
+            SimpleDateFormat formatter = new SimpleDateFormat("d/M/yyyy");
+            try {
+                e.setDateDeNaissance(formatter.parse(DateNaissance.getText().toString()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            e.setTelephone(Phone.getText().toString());
+            e.setHabite(Habitat.getText().toString());
+            e.setNom(Nom.getText().toString());
+            e.setPrenom(Prenom.getText().toString());
+            e.setLieuDeNaissance(LieuNaissance.getText().toString());
+
+            invokeWS(e);
 
 
-            String nom = Nom.getText().toString();
-            String prenom = Prenom.getText().toString();
-            Intent it = new Intent(MyProfileActivity.this, MyProfileActivity.class);
-            it.putExtra("personne",pers);
-            it.putExtra("nom", nom);
-            it.putExtra("prenom", prenom);
-            startActivity(it);
+
+           pers=e;
+
 
 
         }
     }
 
+    public String getStringImage(Bitmap bmp){
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] imageBytes = baos.toByteArray();
+        String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+        return encodedImage;
+    }
+
+    private void invokeWS(final Personne e){
+        final RequestParams params = new RequestParams();
+        Gson gson =new GsonBuilder()
+                .setPrettyPrinting()
+                .setDateFormat("MMM d, yyyy HH:mm:ss")
+                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                .create();
+
+
+
+
+        params.put("personne", gson.toJson(e));
+
+
+        final AsyncHttpClient client = new AsyncHttpClient();
+        final String ip = this.getString(R.string.ipAdress);
+        AsyncHttpResponseHandler RH=new AsyncHttpResponseHandler() {
+            // When the response returned by REST has Http response code '200'
+            @Override
+            public void onSuccess(String response) {
+                // JSON Object
+                Gson gson = new Gson();
+                // When the JSON response has status boolean value assigned with true
+
+                if(response.equals("updated")){
+                    //
+
+                    pers=e;
+                    Toast.makeText(getBaseContext(), "Updated", Toast.LENGTH_LONG);
+
+                }
+                // Else display error message
+                else{
+
+                }
+            }
+            // When the response returned by REST has Http response code other than '200'
+            @Override
+            public void onFailure(int statusCode, Throwable error,
+                                  String content) {
+
+
+                // Hide Progress Dialog
+                // When Http response code is '404'
+                if(statusCode == 404){
+                    Toast.makeText(getBaseContext(), "ERROR 404", Toast.LENGTH_LONG);
+
+                }
+                // When Http response code is '500'
+                else if(statusCode == 500){
+                    Toast.makeText(getBaseContext(), "ERROR 500", Toast.LENGTH_LONG);
+
+                }
+                // When Http response code other than 404, 500
+                else{
+                    Toast.makeText(getBaseContext(), "ERROR", Toast.LENGTH_LONG);
+
+                }
+            }
+
+        };
+        client.get( ip +"/profile/update",params ,RH);
+
+
+
+
+
+
+
+    }
 
 }
