@@ -96,12 +96,14 @@ public class EventActivity extends AppCompatActivity
             navImageProfile.setImageBitmap(bMap);
         }
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_event);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent it = new Intent(EventActivity.this, NewEventActivity.class);
+                Intent it = new Intent(EventActivity.this, NewPostActivity.class);
+                it.putExtra("personne",pers);
                 it.putExtra("evenement",evenement);
+                Log.i("add  " , "daada");
                 startActivity(it);
             }
         });
