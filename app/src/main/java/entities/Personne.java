@@ -20,7 +20,6 @@ public class Personne implements Serializable {
 
     private byte[] photo;
 
-    private Collection<Evenement> evenementCollection;
 
     private static final long serialVersionUID = 1L;
 
@@ -168,13 +167,6 @@ public class Personne implements Serializable {
         return "entities.Personne[ id=" + id + " ]";
     }
 
-    public Collection<Evenement> getEvenementCollection() {
-        return evenementCollection;
-    }
-
-    public void setEvenementCollection(Collection<Evenement> evenementCollection) {
-        this.evenementCollection = evenementCollection;
-    }
 
     public byte[] getPhoto() {
         return photo;
