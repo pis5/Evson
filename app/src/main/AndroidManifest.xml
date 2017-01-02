@@ -49,6 +49,8 @@ package="com.example.mkass.evson">
         android:theme="@style/AppTheme" />
     <activity android:name=".EventActivity" android:label="@string/title_activity_event"
         android:theme="@style/AppTheme"></activity>
+    <activity android:name=".NewPostActivity" android:label="@string/title_activity_event"
+        android:theme="@style/AppTheme"></activity>
 
 </application>
 
