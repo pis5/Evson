@@ -65,7 +65,7 @@ public class MyEventsActivity extends AppCompatActivity
         mLayoutManager = new LinearLayoutManager(this);
         rv.setLayoutManager(mLayoutManager);
 
-        final EvenementAdapter adapter = new EvenementAdapter();
+        final EvenementAdapter adapter = new EvenementAdapter(pers);
         adapter.invokeMesEvenements(pers, 10,false,this);
         rv.setAdapter(adapter);
 

@@ -95,6 +95,7 @@ public class EvenementAdapter extends RecyclerView.Adapter<EvenementAdapter.MyVi
                 public void onClick(View view) {
                     Intent it = new Intent(view.getContext(), EventActivity.class);
                     it.putExtra("personne",pers);
+                    it.putExtra("evenement",currentEv);
                     view.getContext().startActivity(it);
                 }
             });
