@@ -6,11 +6,6 @@
     tools:context="com.example.mkass.evson.MainActivity"
     android:background="#fff">
 
-
-
-
-
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="320dp"
@@ -27,11 +22,6 @@
                 android:gravity="center"
                 android:layout_centerInParent="true"
                 />
-
-
-
-
-
 
         </RelativeLayout>
 
